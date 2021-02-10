@@ -25,11 +25,11 @@
 15. [Fragile test](#fragile-test)
 16. [Test fixtures](#test-fixtures)
 17. [General testing anti-patterns](#general-testing-anti-patterns)
-   * [Exposing private state](#exposing-private-state)
-   * [Leaking domain details](#leaking-domain-details)
-   * [Mocking concrete classes](#mocking-concrete-classes)
-   * [Testing private methods](#testing-private-methods)
-   * [Time as a volatile dependency](#time-as-a-volatile-dependency)
+    * [Exposing private state](#exposing-private-state)
+    * [Leaking domain details](#leaking-domain-details)
+    * [Mocking concrete classes](#mocking-concrete-classes)
+    * [Testing private methods](#testing-private-methods)
+    * [Time as a volatile dependency](#time-as-a-volatile-dependency)
 
 ## Introduction
 
