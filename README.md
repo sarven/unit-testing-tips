@@ -139,6 +139,31 @@ final class UniqueEmailSpecificationStub implements UniqueEmailSpecificationInte
 
 ## Naming
 
+:heavy_minus_sign: Not good:
+```php
+public function test(): void
+{
+    $subscription = SubscriptionMother::new();
+
+    $subscription->activate();
+
+    self::assertEquals(Status::activated(), $subscription->status());
+}
+```
+
+:heavy_check_mark: **Specify explicitly what are you testing**
+```php
+public function sut(): void
+{
+    // sut = System under test
+    $sut = SubscriptionMother::new();
+
+    $sut->activate();
+
+    self::assertEquals(Status::activated(), $sut->status());
+}
+``` 
+
 ## AAA pattern
 
 ## Object mother
