@@ -83,6 +83,11 @@ final class Mailer implements MailerInterface
      * @var Message[]
      */
     private array $messages;
+    
+    public function __construct()
+    {
+        $this->messages = [];
+    }
 
     public function send(Message $message): void
     {
