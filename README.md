@@ -17,6 +17,19 @@
     * [Output](#output)
     * [State](#state)
     * [Communication](#communication)
+10. [Functional architecture and tests](#functional-architecture-and-tests)
+11. [Observable behaviour vs implementation details](#observable-behaviour-vs-implementation-details)
+12. [Unit of behaviour](#unit-of-behaviour)
+13. [Humble pattern](#humble-pattern)
+14. [Trivial test](#trivial-test)
+15. [Fragile test](#fragile-test)
+16. [Test fixtures](#test-fixtures)
+17. [General testing anti-patterns](#general-testing-anti-patterns)
+   * [Exposing private state](#exposing-private-state)
+   * [Leaking domain details](#leaking-domain-details)
+   * [Mocking concrete classes](#mocking-concrete-classes)
+   * [Testing private methods](#testing-private-methods)
+   * [Time as a volatile dependency](#time-as-a-volatile-dependency)
 
 ## Introduction
 
@@ -150,3 +163,30 @@ final class UniqueEmailSpecificationStub implements UniqueEmailSpecificationInte
 
 ### Communication
 
+## Functional architecture and tests
+
+## Observable behaviour vs implementation details
+
+## Unit of behaviour
+
+## Humble pattern
+
+## Trivial test
+
+## Fragile test
+
+## Test fixtures
+
+## Testing
+
+## General testing anti-patterns
+
+### Exposing private state
+
+### Leaking domain details
+
+### Mocking concrete classes
+
+### Testing private methods
+
+### Time as a volatile dependency
