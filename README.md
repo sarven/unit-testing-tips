@@ -22,6 +22,103 @@
 
 ## Test doubles
 
+#### Dummy
+
+```php
+final class Mailer implements MailerInterface
+{
+    public function send(Message $message): void
+    {
+    }
+}
+```
+
+#### Fake
+
+```php
+final class InMemoryCustomerRepository implements CustomerRepositoryInterface
+{
+    /**
+     * @var Customer[]
+     */
+    private array $customers;
+
+    public function __construct()
+    {
+        $this->customers = [];
+    }
+
+    public function store(Customer $customer): void
+    {
+        $this->customers[(string) $customer->id()->id()] = $customer;
+    }
+
+    public function get(CustomerId $id): Customer
+    {
+        if (!isset($this->customers[(string) $id->id()])) {
+            throw new CustomerNotFoundException();
+        }
+
+        return $this->customers[(string) $id->id()];
+    }
+
+    public function findByEmail(Email $email): Customer
+    {
+        foreach ($this->customers as $customer) {
+            if ($customer->getEmail()->isEqual($email)) {
+                return $customer;
+            }
+        }
+
+        throw new CustomerNotFoundException();
+    }
+}
+```
+
+#### Spy
+```php
+final class Mailer implements MailerInterface
+{
+    /**
+     * @var Message[]
+     */
+    private array $messages;
+
+    public function send(Message $message): void
+    {
+        $this->messages[] = $message;
+    }
+
+    public function getCountOfSentMessages(): int
+    {
+        return count($this->messages);
+    }
+}
+```
+
+#### Mock
+
+```php
+$message = new Message('test@test.com', 'Test', 'Test test test');
+$mailer = $this->createMock(MailerInterface::class);
+$mailer
+    ->expects($this->once())
+    ->method('send')
+    ->with($this->equalTo($message));
+```
+
+#### Stub
+
+```php
+final class UniqueEmailSpecificationStub implements UniqueEmailSpecificationInterface
+{
+    public function isUnique(Email $email): bool
+    {
+        return true;
+    }
+}
+```
+
 ## Naming
 
 ## AAA pattern
