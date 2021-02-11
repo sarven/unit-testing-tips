@@ -35,6 +35,12 @@
 
 ## Test doubles
 
+Test doubles are fake dependencies used in tests.
+
+### Stubs
+
+A dummy is a just simple implementation which does nothing.
+
 #### Dummy
 
 ```php
@@ -45,6 +51,8 @@ final class Mailer implements MailerInterface
     }
 }
 ```
+
+A fake is a simplified implementation to simulate the original behaviour.
 
 #### Fake
 
@@ -88,6 +96,29 @@ final class InMemoryCustomerRepository implements CustomerRepositoryInterface
 }
 ```
 
+A stub is the simplest implementation with a hardcoded behaviour.
+
+#### Stub
+
+```php
+final class UniqueEmailSpecificationStub implements UniqueEmailSpecificationInterface
+{
+    public function isUnique(Email $email): bool
+    {
+        return true;
+    }
+}
+```
+
+```php
+$specificationStub = $this->createMock(UniqueEmailSpecificationInterface::class);
+$specificationStub->method('isUnique')->willReturn(true);
+```
+
+### Mocks
+
+A spy is an implementation to verify a specific behaviour.
+
 #### Spy
 ```php
 final class Mailer implements MailerInterface
@@ -116,6 +147,8 @@ final class Mailer implements MailerInterface
 
 #### Mock
 
+A mock is a configured imitation to verify calls on a collaborator.
+
 ```php
 $message = new Message('test@test.com', 'Test', 'Test test test');
 $mailer = $this->createMock(MailerInterface::class);
@@ -125,17 +158,9 @@ $mailer
     ->with($this->equalTo($message));
 ```
 
-#### Stub
-
-```php
-final class UniqueEmailSpecificationStub implements UniqueEmailSpecificationInterface
-{
-    public function isUnique(Email $email): bool
-    {
-        return true;
-    }
-}
-```
+:exclamation: 
+To verify incoming interactions use a stub, but to verify outcoming interactions use a mock. 
+More: [Mock vs Stub](#mock-vs-stub)
 
 ## Naming
 
