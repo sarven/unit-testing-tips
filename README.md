@@ -264,6 +264,56 @@ public function aaa_pattern_example_test(): void
 
 ## Object mother
 
+The pattern helps to create specific objects which can be reused in a few tests. Because of that the arrange section
+is concise and the test as a whole is more readable.
+
+```php
+final class SubscriptionMother
+{
+    public static function new(): Subscription
+    {
+        return new Subscription();
+    }
+
+    public static function activated(): Subscription
+    {
+        $subscription = new Subscription();
+        $subscription->activate();
+        return $subscription;
+    }
+
+    public static function deactivated(): Subscription
+    {
+        $subscription = self::activated();
+        $subscription->deactivate();
+        return $subscription;
+    }
+}
+```
+
+```php
+final class ExampleTest
+{
+    public function example_test_with_activated_subscription(): void
+    {
+        $activatedSubscription = SubscriptionMother::activated();
+
+        // do something
+
+        // check something
+    }
+
+    public function example_test_with_deactivated_subscription(): void
+    {
+        $deactivatedSubscription = SubscriptionMother::deactivated();
+
+        // do something
+
+        // check something
+    }
+}
+```
+
 ## Parameterized test
 
 ## Two schools of unit testing
