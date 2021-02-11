@@ -164,6 +164,55 @@ public function sut(): void
 }
 ``` 
 
+:heavy_minus_sign: Not good:
+```php
+public function it_throws_invalid_credentials_exception_when_sign_in_with_invalid_credentials(): void
+{
+
+}
+
+public function testCreatingWithATooShortPasswordIsNotPossible(): void
+{
+
+}
+
+public function testDeactivateASubscription(): void
+{
+
+}
+```
+
+:heavy_check_mark: Better:  
+- **Using underscore improves readability**
+- **The name should describe the behaviour not the implementation**
+- **Use names without technical keywords. It should be readable for non-programmer person.**
+
+```php
+public function sign_in_with_invalid_credentials_is_not_possible(): void
+{
+
+}
+
+public function creating_with_a_too_short_password_is_not_possible(): void
+{
+
+}
+
+public function deactivating_an_activated_subscription_is_valid(): void
+{
+
+}
+
+public function deactivating_an_inactive_subscription_is_invalid(): void
+{
+
+}
+```
+
+:information_source: Describing the behaviour is important in testing the domain scenarios. 
+If your code is just a utility one it's less important.
+
+
 ## AAA pattern
 
 ## Object mother
