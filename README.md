@@ -184,7 +184,7 @@ public function testDeactivateASubscription(): void
 
 :heavy_check_mark: Better:  
 - **Using underscore improves readability**
-- **The name should describe the behaviour not the implementation**
+- **The name should describe the behaviour, not the implementation**
 - **Use names without technical keywords. It should be readable for non-programmer person.**
 
 ```php
@@ -212,8 +212,30 @@ public function deactivating_an_inactive_subscription_is_invalid(): void
 :information_source: Describing the behaviour is important in testing the domain scenarios. 
 If your code is just a utility one it's less important.
 
-
 ## AAA pattern
+
+It's also common Given, When, Then.
+
+:heavy_check_mark: Separate three sections of the test:  
+
+- **Arrange**: Bring the system under test in the desired state. Prepare dependencies, arguments and finally construct
+the SUT.
+- **Act**: Invoke a tested element.
+- **Assert**: Verify the result, the final state or the communication with collaborators.
+
+```php
+public function aaa_pattern_example_test(): void
+{
+    //Arrange|Given
+    $sut = SubscriptionMother::new();
+
+    //Act|When
+    $sut->activate();
+
+    //Assert|Then
+    self::assertEquals(Status::activated(), $sut->status());
+}
+```
 
 ## Object mother
 
