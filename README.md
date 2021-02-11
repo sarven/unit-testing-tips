@@ -316,6 +316,62 @@ final class ExampleTest
 
 ## Parameterized test
 
+Parameterized test is a good option to test the SUT with a lot of parameters without repeating the code.  
+
+:thumbsdown: This kind of test is less readable. To increase a little the readability negative and positive examples should be
+split up to different tests.
+
+```php
+final class ExampleTest extends TestCase
+{
+    /**
+     * @test
+     * @dataProvider getInvalidEmails
+     */
+    public function detects_an_invalid_email_address(string $email): void
+    {
+        $sut = new EmailValidator();
+
+        $result = $sut->isValid($email);
+
+        self::assertEquals(false, $result);
+    }
+
+    /**
+     * @test
+     * @dataProvider getValidEmails
+     */
+    public function detects_an_valid_email_address(string $email): void
+    {
+        $sut = new EmailValidator();
+
+        $result = $sut->isValid($email);
+
+        self::assertEquals(true, $result);
+    }
+
+    public function getInvalidEmails(): array
+    {
+        return [
+            ['test'],
+            ['test@'],
+            ['test@test'],
+            //...
+        ];
+    }
+
+    public function getValidEmails(): array
+    {
+        return [
+            ['test@test.com'],
+            ['test123@test.com'],
+            ['Test123@test.com'],
+            //...
+        ];
+    }
+}
+```
+
 ## Two schools of unit testing
 
 ### Classical
