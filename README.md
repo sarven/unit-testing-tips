@@ -499,7 +499,7 @@ final class TestExample extends TestCase
 
 ### Output
 
-:heavy_check_mark:  
+:heavy_check_mark:  The best option:  
 - **The best resistance to refactoring**
 - **The best accuracy**
 - **The lowest cost of maintainability**  
@@ -558,7 +558,7 @@ final class ExampleTest extends TestCase
 
 ### State
 
-:white_check_mark:
+:white_check_mark: Worse option:  
 - **Worse resistance to refactoring**
 - **Worse accuracy**
 - **Higher cost of maintainability**
@@ -584,7 +584,7 @@ final class ExampleTest extends TestCase
 
 ### Communication
 
-:white_check_mark:
+:white_check_mark: The worst option: 
 - **The worst resistance to refactoring**
 - **The worst accuracy**
 - **The highest cost of maintainability**
