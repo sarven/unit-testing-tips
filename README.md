@@ -499,6 +499,12 @@ final class TestExample extends TestCase
 
 ### Output
 
+:heavy_check_mark:  
+- **The best resistance to refactoring**
+- **The best accuracy**
+- **The lowest cost of maintainability**  
+- **If it is possible you should prefer this kind of test**
+
 ```php
 final class ExampleTest extends TestCase
 {
@@ -552,6 +558,11 @@ final class ExampleTest extends TestCase
 
 ### State
 
+:white_check_mark:
+- **Worse resistance to refactoring**
+- **Worse accuracy**
+- **Higher cost of maintainability**
+
 ```php
 final class ExampleTest extends TestCase
 {
@@ -572,6 +583,11 @@ final class ExampleTest extends TestCase
 ```
 
 ### Communication
+
+:white_check_mark:
+- **The worst resistance to refactoring**
+- **The worst accuracy**
+- **The highest cost of maintainability**
 
 ```php
 final class ExampleTest extends TestCase
