@@ -376,9 +376,50 @@ final class ExampleTest extends TestCase
 
 ### Classical
 
+```php
+final class TestExample extends TestCase
+{
+    /**
+     * @test
+     */
+    public function suspending_an_subscription_with_can_always_suspend_policy_is_always_possible(): void
+    {
+        $canAlwaysSuspendPolicy = new CanAlwaysSuspendPolicy();
+        $sut = new Subscription();
+
+        $result = $sut->suspend($canAlwaysSuspendPolicy);
+
+        self::assertTrue($result);
+        self::assertEquals(Status::suspend(), $sut->status());
+    }
+}
+```
+
 ### Mockist
 
+```php
+final class TestExample extends TestCase
+{
+    /**
+     * @test
+     */
+    public function suspending_an_subscription_with_can_always_suspend_policy_is_always_possible(): void
+    {
+        $canAlwaysSuspendPolicy = $this->createMock(SuspendingPolicyInterface::class);
+        $canAlwaysSuspendPolicy->method('suspend')->willReturn(true);
+        $sut = new Subscription();
+
+        $result = $sut->suspend($canAlwaysSuspendPolicy);
+
+        self::assertTrue($result);
+        self::assertEquals(Status::suspend(), $sut->status());
+    }
+}
+```
+
 ### Dependencies
+
+[TODO]
 
 ## Mock vs Stub
 
@@ -458,9 +499,102 @@ final class TestExample extends TestCase
 
 ### Output
 
+```php
+final class ExampleTest extends TestCase
+{
+    /**
+     * @test
+     * @dataProvider getInvalidEmails
+     */
+    public function detects_an_invalid_email_address(string $email): void
+    {
+        $sut = new EmailValidator();
+
+        $result = $sut->isValid($email);
+
+        self::assertEquals(false, $result);
+    }
+
+    /**
+     * @test
+     * @dataProvider getValidEmails
+     */
+    public function detects_an_valid_email_address(string $email): void
+    {
+        $sut = new EmailValidator();
+
+        $result = $sut->isValid($email);
+
+        self::assertEquals(true, $result);
+    }
+
+    public function getInvalidEmails(): array
+    {
+        return [
+            ['test'],
+            ['test@'],
+            ['test@test'],
+            //...
+        ];
+    }
+
+    public function getValidEmails(): array
+    {
+        return [
+            ['test@test.com'],
+            ['test123@test.com'],
+            ['Test123@test.com'],
+            //...
+        ];
+    }
+}
+```
+
 ### State
 
+```php
+final class ExampleTest extends TestCase
+{
+    /**
+     * @test
+     */
+    public function adding_an_item_to_cart(): void
+    {
+        $item = new CartItem('Product');
+        $sut = new Cart();
+
+        $sut->addItem($item);
+
+        self::assertEquals(1, $sut->getCount());
+        self::assertEquals($item, $sut->getItems()[0]);
+    }
+}
+```
+
 ### Communication
+
+```php
+final class ExampleTest extends TestCase
+{
+    /**
+     * @test
+     */
+    public function sends_all_notifications(): void
+    {
+        $message1 = new Message();
+        $message2 = new Message();
+        $messageRepository = $this->createMock(MessageRepositoryInterface::class);
+        $messageRepository->method('getAll')->willReturn([$message1, $message2]);
+        $mailer = $this->createMock(MailerInterface::class);
+        $sut = new NotificationService($mailer, $messageRepository);
+
+        $mailer->expects(self::exactly(2))->method('send')
+            ->withConsecutive([self::equalTo($message1)], [self::equalTo($message2)]);
+
+        $sut->send();
+    }
+}
+```
 
 ## Functional architecture and tests
 
