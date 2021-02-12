@@ -316,7 +316,7 @@ final class ExampleTest
 
 ## Parameterized test
 
-Parameterized test is a good option to test the SUT with a lot of parameters without repeating the code.  
+The parameterized test is a good option to test the SUT with a lot of parameters without repeating the code.  
 
 :thumbsdown: This kind of test is less readable. To increase a little the readability negative and positive examples should be
 split up to different tests.
@@ -381,6 +381,78 @@ final class ExampleTest extends TestCase
 ### Dependencies
 
 ## Mock vs Stub
+
+Example: 
+```php
+final class NotificationService
+{
+    public function __construct(
+        private MailerInterface $mailer,
+        private MessageRepositoryInterface $messageRepository
+    ) {}
+
+    public function send(): void
+    {
+        $messages = $this->messageRepository->getAll();
+        foreach ($messages as $message) {
+            $this->mailer->send($message);
+        }
+    }
+}
+```
+
+:heavy_check_mark: Bad:
+
+- **Asserting interactions with stubs leads to fragile tests**
+
+```php
+final class TestExample extends TestCase
+{
+    /**
+     * @test
+     */
+    public function sends_all_notifications(): void
+    {
+        $message1 = new Message();
+        $message2 = new Message();
+        $messageRepository = $this->createMock(MessageRepositoryInterface::class);
+        $messageRepository->method('getAll')->willReturn([$message1, $message2]);
+        $mailer = $this->createMock(MailerInterface::class);
+        $sut = new NotificationService($mailer, $messageRepository);
+
+        $messageRepository->expects(self::once())->method('getAll');
+        $mailer->expects(self::exactly(2))->method('send')
+            ->withConsecutive([self::equalTo($message1)], [self::equalTo($message2)]);
+
+        $sut->send();
+    }
+}
+```
+
+:heavy_check_mark: Good:
+```php
+final class TestExample extends TestCase
+{
+    /**
+     * @test
+     */
+    public function sends_all_notifications(): void
+    {
+        $message1 = new Message();
+        $message2 = new Message();
+        $messageRepository = $this->createMock(MessageRepositoryInterface::class);
+        $messageRepository->method('getAll')->willReturn([$message1, $message2]);
+        $mailer = $this->createMock(MailerInterface::class);
+        $sut = new NotificationService($mailer, $messageRepository);
+
+        // Removed an asserting interactions with the stub
+        $mailer->expects(self::exactly(2))->method('send')
+            ->withConsecutive([self::equalTo($message1)], [self::equalTo($message2)]);
+
+        $sut->send();
+    }
+}
+```
 
 ## Three styles of unit testing
 
