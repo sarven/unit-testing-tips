@@ -442,7 +442,7 @@ final class NotificationService
 }
 ```
 
-:heavy_check_mark: Bad:
+:x: Bad:
 
 - **Asserting interactions with stubs leads to fragile tests**
 
