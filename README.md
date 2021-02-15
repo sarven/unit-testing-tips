@@ -623,6 +623,114 @@ final class ExampleTest extends TestCase
 
 ## Functional architecture and tests
 
+:x: Bad:
+```php
+final class NameService
+{
+    public function __construct(private CacheStorageInterface $cacheStorage) {}
+
+    public function loadAll(): void
+    {
+        $namesCsv = array_map('str_getcsv', file(__DIR__.'/../names.csv'));
+        $names = [];
+
+        foreach ($namesCsv as $nameData) {
+            if (!isset($nameData[0], $nameData[1])) {
+                continue;
+            }
+
+            $names[] = new Name($nameData[0], new Gender($nameData[1]));
+        }
+
+        $this->cacheStorage->store('names', $names);
+    }
+}
+```
+
+**How to test a code like this? It is possible only with an integration test, because there is directly used 
+an infrastructure code related with a file system.**
+
+:heavy_check_mark: Good:
+```php
+final class NameParser
+{
+    /**
+     * @param array $namesData
+     * @return Name[]
+     */
+    public function parse(array $namesData): array
+    {
+        $names = [];
+
+        foreach ($namesData as $nameData) {
+            if (!isset($nameData[0], $nameData[1])) {
+                continue;
+            }
+
+            $names[] = new Name($nameData[0], new Gender($nameData[1]));
+        }
+
+        return $names;
+    }
+}
+```
+
+```php
+final class CsvNamesFileLoader
+{
+    public function load(): array
+    {
+        return array_map('str_getcsv', file(__DIR__.'/../names.csv'));
+    }
+}
+```
+
+```php
+final class ApplicationService
+{
+    public function __construct(
+        private CsvNamesFileLoader $fileLoader,
+        private NameParser $parser,
+        private CacheStorageInterface $cacheStorage
+    ) {}
+
+    public function loadNames(): void
+    {
+        $namesData = $this->fileLoader->load();
+        $names = $this->parser->parse($namesData);
+        $this->cacheStorage->store('names', $names);
+    }
+}
+```
+
+```php
+final class ValidUnitExampleTest extends TestCase
+{
+    /**
+     * @test
+     */
+    public function parse_all_names(): void
+    {
+        $namesData = [
+            ['John', 'M'],
+            ['Lennon', 'U'],
+            ['Sarah', 'W']
+        ];
+        $sut = new NameParser();
+
+        $result = $sut->parse($namesData);
+        self::assertEquals(
+            [
+                new Name('John', new Gender('M')),
+                new Name('Lennon', new Gender('U')),
+                new Name('Sarah', new Gender('W'))
+            ],
+            $result
+        );
+    }
+}
+```
+
 ## Observable behaviour vs implementation details
 
 ## Unit of behaviour
