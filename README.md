@@ -733,7 +733,205 @@ final class ValidUnitExampleTest extends TestCase
 
 ## Observable behaviour vs implementation details
 
+:x: Bad:
+
+```php
+final class ApplicationService
+{
+    public function __construct(private SubscriptionRepositoryInterface $subscriptionRepository) {}
+
+    public function renewSubscription(int $subscriptionId): bool
+    {
+        $subscription = $this->subscriptionRepository->findById($subscriptionId);
+
+        if (!$subscription->getStatus()->isEqual(Status::expired())) {
+            return false;
+        }
+
+        $subscription->setStatus(Status::active());
+        $subscription->setModifiedAt(new \DateTimeImmutable());
+        return true;
+    }
+}
+```
+
+```php
+final class Subscription
+{
+    private Status $status;
+
+    private \DateTimeImmutable $modifiedAt;
+
+    public function __construct(Status $status, \DateTimeImmutable $modifiedAt)
+    {
+        $this->status = $status;
+        $this->modifiedAt = $modifiedAt;
+    }
+
+    public function getStatus(): Status
+    {
+        return $this->status;
+    }
+
+    public function setStatus(Status $status): void
+    {
+        $this->status = $status;
+    }
+
+    public function getModifiedAt(): \DateTimeImmutable
+    {
+        return $this->modifiedAt;
+    }
+
+    public function setModifiedAt(\DateTimeImmutable $modifiedAt): void
+    {
+        $this->modifiedAt = $modifiedAt;
+    }
+}
+```
+
+```php
+final class InvalidTestExample extends TestCase
+{
+    /**
+     * @test
+     */
+    public function renew_an_expired_subscription_is_possible(): void
+    {
+        $modifiedAt = new \DateTimeImmutable();
+        $expiredSubscription = new Subscription(Status::expired(), $modifiedAt);
+        $repository = $this->createStub(SubscriptionRepositoryInterface::class);
+        $repository->method('findById')->willReturn($expiredSubscription);
+        $sut = new ApplicationService($repository);
+
+        $result = $sut->renewSubscription(1);
+
+        self::assertEquals(Status::active(), $expiredSubscription->getStatus());
+        self::assertGreaterThan($modifiedAt, $expiredSubscription->getModifiedAt());
+        self::assertTrue($result);
+    }
+
+    /**
+     * @test
+     */
+    public function renew_an_active_subscription_is_not_possible(): void
+    {
+        $modifiedAt = new \DateTimeImmutable();
+        $activeSubscription = new Subscription(Status::active(), $modifiedAt);
+        $repository = $this->createStub(SubscriptionRepositoryInterface::class);
+        $repository->method('findById')->willReturn($activeSubscription);
+        $sut = new ApplicationService($repository);
+
+        $result = $sut->renewSubscription(1);
+
+        self::assertEquals($modifiedAt, $activeSubscription->getModifiedAt());
+        self::assertFalse($result);
+    }
+}
+```
+
+:heavy_check_mark: Good:
+
+```php
+final class ApplicationService
+{
+    public function __construct(private SubscriptionRepositoryInterface $subscriptionRepository) {}
+
+    public function renewSubscription(int $subscriptionId): bool
+    {
+        $subscription = $this->subscriptionRepository->findById($subscriptionId);
+        return $subscription->renew(new \DateTimeImmutable());
+    }
+}
+```
+
+```php
+final class Subscription
+{
+    private Status $status;
+
+    private \DateTimeImmutable $modifiedAt;
+
+    public function __construct(\DateTimeImmutable $modifiedAt)
+    {
+        $this->status = Status::new();
+        $this->modifiedAt = $modifiedAt;
+    }
+
+    public function renew(\DateTimeImmutable $modifiedAt): bool
+    {
+        if (!$this->status->isEqual(Status::expired())) {
+            return false;
+        }
+
+        $this->status = Status::active();
+        $this->modifiedAt = $modifiedAt;
+        return true;
+    }
+
+    public function active(\DateTimeImmutable $modifiedAt): void
+    {
+        //simplified
+        $this->status = Status::active();
+        $this->modifiedAt = $modifiedAt;
+    }
+
+    public function expire(\DateTimeImmutable $modifiedAt): void
+    {
+        //simplified
+        $this->status = Status::expired();
+        $this->modifiedAt = $modifiedAt;
+    }
+
+    public function isActive(): bool
+    {
+        return $this->status->isEqual(Status::active());
+    }
+}
+```
+
+```php
+final class ValidTestExample extends TestCase
+{
+    /**
+     * @test
+     */
+    public function renew_an_expired_subscription_is_possible(): void
+    {
+        $expiredSubscription = SubscriptionMother::expired();
+        $repository = $this->createStub(SubscriptionRepositoryInterface::class);
+        $repository->method('findById')->willReturn($expiredSubscription);
+        $sut = new ApplicationService($repository);
+
+        $result = $sut->renewSubscription(1);
+
+        // skip checking modifiedAt as it's not a part of observable behaviour. To check this value we
+        // would have to add getter for modifiedAt, probably only for tests purposes.
+        self::assertTrue($expiredSubscription->isActive());
+        self::assertTrue($result);
+    }
+
+    /**
+     * @test
+     */
+    public function renew_an_active_subscription_is_not_possible(): void
+    {
+        $activeSubscription = SubscriptionMother::active();
+        $repository = $this->createStub(SubscriptionRepositoryInterface::class);
+        $repository->method('findById')->willReturn($activeSubscription);
+        $sut = new ApplicationService($repository);
+
+        $result = $sut->renewSubscription(1);
+
+        self::assertTrue($activeSubscription->isActive());
+        self::assertFalse($result);
+    }
+}
+```
+
 ## Unit of behaviour
+
+
 
 ## Humble pattern
 
