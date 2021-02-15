@@ -374,7 +374,10 @@ final class ExampleTest extends TestCase
 
 ## Two schools of unit testing
 
-### Classical
+### Classical (Detroit school)
+
+- The unit as a single unit of behaviour, it can be a few related classes. 
+- Every test should be isolated from others. So it must be possible to invoke them in parallel or in a any order.
 
 ```php
 final class TestExample extends TestCase
@@ -395,7 +398,10 @@ final class TestExample extends TestCase
 }
 ```
 
-### Mockist
+### Mockist (London school)
+
+- The unit as a single class.
+- The unit should be isolated from all collaborators.
 
 ```php
 final class TestExample extends TestCase
@@ -416,6 +422,9 @@ final class TestExample extends TestCase
     }
 }
 ```
+
+:information_source:
+**The classical approach is better in order to avoid fragile tests.**
 
 ### Dependencies
 
