@@ -947,7 +947,7 @@ class CannotSuspendExpiredSubscriptionPolicy implements SuspendingPolicyInterfac
 }
 ```
 
-```
+```php
 class CannotSuspendExpiredSubscriptionPolicyTest extends TestCase
 {
     /**
