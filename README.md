@@ -1411,7 +1411,135 @@ final class SubscriptionSuspendingTest extends TestCase
 
 ## Trivial test
 
+:x: Bad:
+
+```php
+final class Customer
+{
+    public function __construct(private string $name) {}
+
+    public function getName(): string
+    {
+        return $this->name;
+    }
+
+    public function setName(string $name): void
+    {
+        $this->name = $name;
+    }
+}
+```
+
+```php
+final class CustomerTest extends TestCase
+{
+    public function testSetName(): void
+    {
+        $customer = new Customer('Jack');
+
+        $customer->setName('John');
+
+        self::assertEquals('John', $customer->getName());
+    }
+}
+```
+
+```php
+final class EventSubscriber
+{
+    public static function getSubscribedEvents(): array
+    {
+        return ['event' => 'onEvent'];
+    }
+
+    public function onEvent(): void
+    {
+
+    }
+}
+```
+
+```php
+final class EventSubscriberTest extends TestCase
+{
+    public function testGetSubscribedEvents(): void
+    {
+        $result = EventSubscriber::getSubscribedEvents();
+
+        self::assertEquals(['event' => 'onEvent'], $result);
+    }
+}
+```
+
 ## Fragile test
+
+:x: Bad:
+
+```php
+final class UserRepository
+{
+    public function __construct(
+        private Connection $connection
+    ) {}
+
+    public function getUserNameByEmail(string $email): ?array
+    {
+        return $this
+            ->connection
+            ->createQueryBuilder()
+            ->from('user', 'u')
+            ->where('u.email = :email')
+            ->setParameter('email', $email)
+            ->execute()
+            ->fetch();
+    }
+}
+```
+
+```php
+final class TestUserRepository extends TestCase
+{
+    public function testGetUserNameByEmail(): void
+    {
+        $email = 'test@test.com';
+        $connection = $this->createMock(Connection::class);
+        $queryBuilder = $this->createMock(QueryBuilder::class);
+        $result = $this->createMock(ResultStatement::class);
+        $userRepository = new UserRepository($connection);
+        $connection
+            ->expects($this->once())
+            ->method('createQueryBuilder')
+            ->willReturn($queryBuilder);
+        $queryBuilder
+            ->expects($this->once())
+            ->method('from')
+            ->with('user', 'u')
+            ->willReturn($queryBuilder);
+        $queryBuilder
+            ->expects($this->once())
+            ->method('where')
+            ->with('u.email = :email')
+            ->willReturn($queryBuilder);
+        $queryBuilder
+            ->expects($this->once())
+            ->method('setParameter')
+            ->with('email', $email)
+            ->willReturn($queryBuilder);
+        $queryBuilder
+            ->expects($this->once())
+            ->method('execute')
+            ->willReturn($result);
+        $result
+            ->expects($this->once())
+            ->method('fetch')
+            ->willReturn(['email' => $email]);
+
+        $result = $userRepository->getUserNameByEmail($email);
+
+        self::assertEquals(['email' => $email], $result);
+    }
+}
+```
 
 ## Test fixtures
 
