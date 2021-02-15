@@ -931,7 +931,481 @@ final class ValidTestExample extends TestCase
 
 ## Unit of behaviour
 
+:x: Bad:
 
+```php
+class CannotSuspendExpiredSubscriptionPolicy implements SuspendingPolicyInterface
+{
+    public function suspend(Subscription $subscription, \DateTimeImmutable $at): bool
+    {
+        if ($subscription->isExpired()) {
+            return false;
+        }
+
+        return true;
+    }
+}
+```
+
+```
+class CannotSuspendExpiredSubscriptionPolicyTest extends TestCase
+{
+    /**
+     * @test
+     */
+    public function it_returns_true_when_a_subscription_is_expired(): void
+    {
+        $policy = new CannotSuspendExpiredSubscriptionPolicy();
+        $subscription = $this->createMock(Subscription::class);
+        $subscription->method('isExpired')->willReturn(true);
+
+        self::assertFalse($policy->suspend($subscription, new \DateTimeImmutable()));
+    }
+
+    /**
+     * @test
+     */
+    public function it_returns_false_when_a_subscription_is_not_expired(): void
+    {
+        $policy = new CannotSuspendExpiredSubscriptionPolicy();
+        $subscription = $this->createMock(Subscription::class);
+        $subscription->method('isExpired')->willReturn(false);
+
+        self::assertTrue($policy->suspend($subscription, new \DateTimeImmutable()));
+    }
+}
+```
+
+```php
+class CannotSuspendNewSubscriptionPolicy implements SuspendingPolicyInterface
+{
+    public function suspend(Subscription $subscription, \DateTimeImmutable $at): bool
+    {
+        if ($subscription->isNew()) {
+            return false;
+        }
+
+        return true;
+    }
+}
+```
+
+```php
+class CannotSuspendNewSubscriptionPolicyTest extends TestCase
+{
+    /**
+     * @test
+     */
+    public function it_returns_false_when_a_subscription_is_new(): void
+    {
+        $policy = new CannotSuspendNewSubscriptionPolicy();
+        $subscription = $this->createMock(Subscription::class);
+        $subscription->method('isNew')->willReturn(true);
+
+        self::assertFalse($policy->suspend($subscription, new \DateTimeImmutable()));
+    }
+
+    /**
+     * @test
+     */
+    public function it_returns_true_when_a_subscription_is_not_new(): void
+    {
+        $policy = new CannotSuspendNewSubscriptionPolicy();
+        $subscription = $this->createMock(Subscription::class);
+        $subscription->method('isNew')->willReturn(false);
+
+        self::assertTrue($policy->suspend($subscription, new \DateTimeImmutable()));
+    }
+}
+```
+
+```php
+class CanSuspendAfterOneMonthPolicy implements SuspendingPolicyInterface
+{
+    public function suspend(Subscription $subscription, \DateTimeImmutable $at): bool
+    {
+        $oneMonthEarlierDate = \DateTime::createFromImmutable($at)->sub(new \DateInterval('P1M'));
+
+        return $subscription->isOlderThan(\DateTimeImmutable::createFromMutable($oneMonthEarlierDate));
+    }
+}
+```
+
+```php
+class CanSuspendAfterOneMonthPolicyTest extends TestCase
+{
+    /**
+     * @test
+     */
+    public function it_returns_true_when_a_subscription_is_older_than_one_month(): void
+    {
+        $date = new \DateTimeImmutable('2021-01-29');
+        $policy = new CanSuspendAfterOneMonthPolicy();
+        $subscription = new Subscription(new \DateTimeImmutable('2020-12-28'));
+
+        self::assertTrue($policy->suspend($subscription, $date));
+    }
+
+    /**
+     * @test
+     */
+    public function it_returns_false_when_a_subscription_is_not_older_than_one_month(): void
+    {
+        $date = new \DateTimeImmutable('2021-01-29');
+        $policy = new CanSuspendAfterOneMonthPolicy();
+        $subscription = new Subscription(new \DateTimeImmutable('2020-01-01'));
+
+        self::assertTrue($policy->suspend($subscription, $date));
+    }
+}
+```
+
+```php
+class Status
+{
+    private const EXPIRED = 'expired';
+    private const ACTIVE = 'active';
+    private const NEW = 'new';
+    private const SUSPENDED = 'suspended';
+
+    private string $status;
+
+    private function __construct(string $status)
+    {
+        $this->status = $status;
+    }
+
+    public static function expired(): self
+    {
+        return new self(self::EXPIRED);
+    }
+
+    public static function active(): self
+    {
+        return new self(self::ACTIVE);
+    }
+
+    public static function new(): self
+    {
+        return new self(self::NEW);
+    }
+
+    public static function suspended(): self
+    {
+        return new self(self::SUSPENDED);
+    }
+
+    public function isEqual(self $status): bool
+    {
+        return $this->status === $status->status;
+    }
+}
+```
+
+```php
+class StatusTest extends TestCase
+{
+    public function testEquals(): void
+    {
+        $status1 = Status::active();
+        $status2 = Status::active();
+
+        self::assertTrue($status1->isEqual($status2));
+    }
+
+    public function testNotEquals(): void
+    {
+        $status1 = Status::active();
+        $status2 = Status::expired();
+
+        self::assertFalse($status1->isEqual($status2));
+    }
+}
+```
+
+```php
+class SubscriptionTest extends TestCase
+{
+    /**
+     * @test
+     */
+    public function suspending_a_subscription_is_possible_when_a_policy_returns_true(): void
+    {
+        $policy = $this->createMock(SuspendingPolicyInterface::class);
+        $policy->expects($this->once())->method('suspend')->willReturn(true);
+        $sut = new Subscription(new \DateTimeImmutable());
+
+        $result = $sut->suspend($policy, new \DateTimeImmutable());
+
+        self::assertTrue($result);
+        self::assertTrue($sut->isSuspended());
+    }
+
+    /**
+     * @test
+     */
+    public function suspending_a_subscription_is_not_possible_when_a_policy_returns_false(): void
+    {
+        $policy = $this->createMock(SuspendingPolicyInterface::class);
+        $policy->expects($this->once())->method('suspend')->willReturn(false);
+        $sut = new Subscription(new \DateTimeImmutable());
+
+        $result = $sut->suspend($policy, new \DateTimeImmutable());
+
+        self::assertFalse($result);
+        self::assertFalse($sut->isSuspended());
+    }
+
+    /**
+     * @test
+     */
+    public function it_returns_true_when_a_subscription_is_older_than_one_month(): void
+    {
+        $date = new \DateTimeImmutable();
+        $futureDate = $date->add(new \DateInterval('P1M'));
+        $sut = new Subscription($date);
+
+        self::assertTrue($sut->isOlderThan($futureDate));
+    }
+
+    /**
+     * @test
+     */
+    public function it_returns_false_when_a_subscription_is_not_older_than_one_month(): void
+    {
+        $date = new \DateTimeImmutable();
+        $futureDate = $date->add(new \DateInterval('P1D'));
+        $sut = new Subscription($date);
+
+        self::assertTrue($sut->isOlderThan($futureDate));
+    }
+}
+```
+
+:heavy_check_mark: Good:
+
+```php
+final class CannotSuspendExpiredSubscriptionPolicy implements SuspendingPolicyInterface
+{
+    public function suspend(Subscription $subscription, \DateTimeImmutable $at): bool
+    {
+        if ($subscription->isExpired()) {
+            return false;
+        }
+
+        return true;
+    }
+}
+```
+
+```php
+final class CannotSuspendNewSubscriptionPolicy implements SuspendingPolicyInterface
+{
+    public function suspend(Subscription $subscription, \DateTimeImmutable $at): bool
+    {
+        if ($subscription->isNew()) {
+            return false;
+        }
+
+        return true;
+    }
+}
+```
+
+```php
+final class CanSuspendAfterOneMonthPolicy implements SuspendingPolicyInterface
+{
+    public function suspend(Subscription $subscription, \DateTimeImmutable $at): bool
+    {
+        $oneMonthEarlierDate = \DateTime::createFromImmutable($at)->sub(new \DateInterval('P1M'));
+
+        return $subscription->isOlderThan(\DateTimeImmutable::createFromMutable($oneMonthEarlierDate));
+    }
+}
+```
+
+```php
+final class Status
+{
+    private const EXPIRED = 'expired';
+    private const ACTIVE = 'active';
+    private const NEW = 'new';
+    private const SUSPENDED = 'suspended';
+
+    private string $status;
+
+    private function __construct(string $status)
+    {
+        $this->status = $status;
+    }
+
+    public static function expired(): self
+    {
+        return new self(self::EXPIRED);
+    }
+
+    public static function active(): self
+    {
+        return new self(self::ACTIVE);
+    }
+
+    public static function new(): self
+    {
+        return new self(self::NEW);
+    }
+
+    public static function suspended(): self
+    {
+        return new self(self::SUSPENDED);
+    }
+
+    public function isEqual(self $status): bool
+    {
+        return $this->status === $status->status;
+    }
+}
+```
+
+```php
+final class Subscription
+{
+    private Status $status;
+
+    private \DateTimeImmutable $createdAt;
+
+    public function __construct(\DateTimeImmutable $createdAt)
+    {
+        $this->status = Status::new();
+        $this->createdAt = $createdAt;
+    }
+
+    public function suspend(SuspendingPolicyInterface $suspendingPolicy, \DateTimeImmutable $at): bool
+    {
+        $result = $suspendingPolicy->suspend($this, $at);
+        if ($result) {
+            $this->status = Status::suspended();
+        }
+
+        return $result;
+    }
+
+    public function isOlderThan(\DateTimeImmutable $date): bool
+    {
+        return $this->createdAt < $date;
+    }
+
+    public function activate(): void
+    {
+        $this->status = Status::active();
+    }
+
+    public function expire(): void
+    {
+        $this->status = Status::expired();
+    }
+
+    public function isExpired(): bool
+    {
+        return $this->status->isEqual(Status::expired());
+    }
+
+    public function isActive(): bool
+    {
+        return $this->status->isEqual(Status::active());
+    }
+
+    public function isNew(): bool
+    {
+        return $this->status->isEqual(Status::new());
+    }
+
+    public function isSuspended(): bool
+    {
+        return $this->status->isEqual(Status::suspended());
+    }
+}
+```
+
+```php
+final class SubscriptionSuspendingTest extends TestCase
+{
+    /**
+     * @test
+     */
+    public function suspending_an_expired_subscription_with_cannot_suspend_expired_policy_is_not_possible(): void
+    {
+        $sut = new Subscription(new \DateTimeImmutable());
+        $sut->activate();
+        $sut->expire();
+
+        $result = $sut->suspend(new CannotSuspendExpiredSubscriptionPolicy(), new \DateTimeImmutable());
+
+        self::assertFalse($result);
+    }
+
+    /**
+     * @test
+     */
+    public function suspending_a_new_subscription_with_cannot_suspend_new_policy_is_not_possible(): void
+    {
+        $sut = new Subscription(new \DateTimeImmutable());
+
+        $result = $sut->suspend(new CannotSuspendNewSubscriptionPolicy(), new \DateTimeImmutable());
+
+        self::assertFalse($result);
+    }
+
+    /**
+     * @test
+     */
+    public function suspending_an_active_subscription_with_cannot_suspend_new_policy_is_possible(): void
+    {
+        $sut = new Subscription(new \DateTimeImmutable());
+        $sut->activate();
+
+        $result = $sut->suspend(new CannotSuspendNewSubscriptionPolicy(), new \DateTimeImmutable());
+
+        self::assertTrue($result);
+    }
+
+    /**
+     * @test
+     */
+    public function suspending_an_active_subscription_with_cannot_suspend_expired_policy_is_possible(): void
+    {
+        $sut = new Subscription(new \DateTimeImmutable());
+        $sut->activate();
+
+        $result = $sut->suspend(new CannotSuspendExpiredSubscriptionPolicy(), new \DateTimeImmutable());
+
+        self::assertTrue($result);
+    }
+
+    /**
+     * @test
+     */
+    public function suspending_an_subscription_before_a_one_month_is_not_possible(): void
+    {
+        $sut = new Subscription(new \DateTimeImmutable('2020-01-01'));
+
+        $result = $sut->suspend(new CanSuspendAfterOneMonthPolicy(), new \DateTimeImmutable('2020-01-10'));
+
+        self::assertFalse($result);
+    }
+
+    /**
+     * @test
+     */
+    public function suspending_an_subscription_after_a_one_month_is_possible(): void
+    {
+        $sut = new Subscription(new \DateTimeImmutable('2020-01-01'));
+
+        $result = $sut->suspend(new CanSuspendAfterOneMonthPolicy(), new \DateTimeImmutable('2020-02-02'));
+
+        self::assertTrue($result);
+    }
+}
+```
 
 ## Humble pattern
 
