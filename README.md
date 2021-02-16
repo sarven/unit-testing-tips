@@ -1584,7 +1584,6 @@ final class InvalidTest extends TestCase
     public function suspending_a_new_subscription_with_cannot_suspend_new_policy_is_not_possible(): void
     {
         // Here we need to create a new subscription, it is not possible to change $this->subscription to a new subscription
-        self::assertTrue(true);
     }
 }
 ```
@@ -1653,10 +1652,174 @@ final class ValidTest extends TestCase
 
 ### Exposing private state
 
+:x: Bad:
+
+```php
+final class Customer
+{
+    private CustomerType $type;
+
+    private DiscountCalculationPolicyInterface $discountCalculationPolicy;
+
+    public function __construct()
+    {
+        $this->type = CustomerType::NORMAL();
+        $this->discountCalculationPolicy = new NormalDiscountPolicy();
+    }
+
+    public function makeVip(): void
+    {
+        $this->type = CustomerType::VIP();
+        $this->discountCalculationPolicy = new VipDiscountPolicy();
+    }
+
+    public function getCustomerType(): CustomerType
+    {
+        return $this->type;
+    }
+
+    public function getPercentageDiscount(): int
+    {
+        return $this->discountCalculationPolicy->getPercentageDiscount();
+    }
+}
+```
+
+```php
+final class InvalidTest extends TestCase
+{
+    public function testMakeVip(): void
+    {
+        $sut = new Customer();
+        $sut->makeVip();
+
+        self::assertEquals(CustomerType::VIP(), $sut->getCustomerType());
+    }
+}
+```
+
+:heavy_check_mark: Good:
+
+```php
+final class Customer
+{
+    private CustomerType $type;
+
+    private DiscountCalculationPolicyInterface $discountCalculationPolicy;
+
+    public function __construct()
+    {
+        $this->type = CustomerType::NORMAL();
+        $this->discountCalculationPolicy = new NormalDiscountPolicy();
+    }
+
+    public function makeVip(): void
+    {
+        $this->type = CustomerType::VIP();
+        $this->discountCalculationPolicy = new VipDiscountPolicy();
+    }
+
+    public function getPercentageDiscount(): int
+    {
+        return $this->discountCalculationPolicy->getPercentageDiscount();
+    }
+}
+```
+
+```php
+final class ValidTest extends TestCase
+{
+    /**
+     * @test
+     */
+    public function a_vip_customer_has_a_25_percentage_discount(): void
+    {
+        $sut = new Customer();
+        $sut->makeVip();
+
+        self::assertEquals(25, $sut->getPercentageDiscount());
+    }
+}
+```
+
 ### Leaking domain details
+
+```php
+final class DiscountCalculator
+{
+    public function calculate(int $isVipFromYears): int
+    {
+        Assert::greaterThanEq($isVipFromYears, 0);
+        return min(($isVipFromYears * 10) + 3, 80);
+    }
+}
+```
+
+:x: Bad:
+
+```php
+final class InvalidTest extends TestCase
+{
+    /**
+     * @dataProvider discountDataProvider
+     */
+    public function testCalculate(int $vipDaysFrom, int $expected): void
+    {
+        $sut = new DiscountCalculator();
+
+        self::assertEquals($expected, $sut->calculate($vipDaysFrom));
+    }
+
+    public function discountDataProvider(): array
+    {
+        return [
+            [0, 0 * 10 + 3], //leaking domain details
+            [1, 1 * 10 + 3],
+            [5, 5 * 10 + 3],
+            [8, 80]
+        ];
+    }
+}
+```
+
+:heavy_check_mark: Good:
+
+```php
+final class ValidTest extends TestCase
+{
+    /**
+     * @dataProvider discountDataProvider
+     */
+    public function testCalculate(int $vipDaysFrom, int $expected): void
+    {
+        $sut = new DiscountCalculator();
+
+        self::assertEquals($expected, $sut->calculate($vipDaysFrom));
+    }
+
+    public function discountDataProvider(): array
+    {
+        return [
+            [0, 3],
+            [1, 13],
+            [5, 53],
+            [8, 80]
+        ];
+    }
+}
+```
 
 ### Mocking concrete classes
 
+:x: Bad:
+:heavy_check_mark: Good:
+
 ### Testing private methods
 
+:x: Bad:
+:heavy_check_mark: Good:
+
 ### Time as a volatile dependency
+
+:x: Bad:
+:heavy_check_mark: Good:
