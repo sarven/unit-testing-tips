@@ -1812,14 +1812,403 @@ final class ValidTest extends TestCase
 ### Mocking concrete classes
 
 :x: Bad:
+
+```php
+class DiscountCalculator
+{
+    public function calculateInternalDiscount(int $isVipFromYears): int
+    {
+        Assert::greaterThanEq($isVipFromYears, 0);
+        return min(($isVipFromYears * 10) + 3, 80);
+    }
+
+    public function calculateAdditionalDiscountFromExternalSystem(): int
+    {
+        // get data from an external system to calculate a discount
+        return 5;
+    }
+}
+```
+
+```php
+class OrderService
+{
+    public function __construct(private DiscountCalculator $discountCalculator) {}
+
+    public function getTotalPriceWithDiscount(int $totalPrice, int $vipFromDays): int
+    {
+        $internalDiscount = $this->discountCalculator->calculateInternalDiscount($vipFromDays);
+        $externalDiscount = $this->discountCalculator->calculateAdditionalDiscountFromExternalSystem();
+        $discountSum = $internalDiscount + $externalDiscount;
+        return $totalPrice - (int) ceil(($totalPrice * $discountSum) / 100);
+    }
+}
+```
+
+```php
+final class InvalidTest extends TestCase
+{
+    /**
+     * @dataProvider orderDataProvider
+     */
+    public function testGetTotalPriceWithDiscount(int $totalPrice, int $vipDaysFrom, int $expected): void
+    {
+        $discountCalculator = $this->createPartialMock(DiscountCalculator::class, ['calculateAdditionalDiscountFromExternalSystem']);
+        $discountCalculator->method('calculateAdditionalDiscountFromExternalSystem')->willReturn(5);
+        $sut = new OrderService($discountCalculator);
+
+        self::assertEquals($expected, $sut->getTotalPriceWithDiscount($totalPrice, $vipDaysFrom));
+    }
+
+    public function orderDataProvider(): array
+    {
+        return [
+            [1000, 0, 920],
+            [500, 1, 410],
+            [644, 5, 270],
+        ];
+    }
+}
+```
+
 :heavy_check_mark: Good:
+
+```php
+interface ExternalDiscountCalculatorInterface
+{
+    public function calculate(): int;
+}
+```
+
+```php
+final class InternalDiscountCalculator
+{
+    public function calculate(int $isVipFromYears): int
+    {
+        Assert::greaterThanEq($isVipFromYears, 0);
+        return min(($isVipFromYears * 10) + 3, 80);
+    }
+}
+```
+
+```php
+final class OrderService
+{
+    public function __construct(
+        private InternalDiscountCalculator $discountCalculator,
+        private ExternalDiscountCalculatorInterface $externalDiscountCalculator
+    ) {}
+
+    public function getTotalPriceWithDiscount(int $totalPrice, int $vipFromDays): int
+    {
+        $internalDiscount = $this->discountCalculator->calculate($vipFromDays);
+        $externalDiscount = $this->externalDiscountCalculator->calculate();
+        $discountSum = $internalDiscount + $externalDiscount;
+        return $totalPrice - (int) ceil(($totalPrice * $discountSum) / 100);
+    }
+}
+```
+
+```php
+final class ValidTest extends TestCase
+{
+    /**
+     * @dataProvider orderDataProvider
+     */
+    public function testGetTotalPriceWithDiscount(int $totalPrice, int $vipDaysFrom, int $expected): void
+    {
+        $externalDiscountCalculator = $this->createMock(ExternalDiscountCalculatorInterface::class);
+        $externalDiscountCalculator->method('calculate')->willReturn(5);
+        $sut = new OrderService(new InternalDiscountCalculator(), $externalDiscountCalculator);
+
+        self::assertEquals($expected, $sut->getTotalPriceWithDiscount($totalPrice, $vipDaysFrom));
+    }
+
+    public function orderDataProvider(): array
+    {
+        return [
+            [1000, 0, 920],
+            [500, 1, 410],
+            [644, 5, 270],
+        ];
+    }
+}
+```
 
 ### Testing private methods
 
+```php
+final class OrderItem
+{
+    public function __construct(private int $total) {}
+
+    public function getTotal(): int
+    {
+        return $this->total;
+    }
+}
+```
+
+```php
+final class Order
+{
+    /**
+     * @param OrderItem[] $items
+     * @param int $transportCost
+     */
+    public function __construct(private array $items, private int $transportCost) {}
+
+    public function getTotal(): int
+    {
+        return $this->getItemsTotal() + $this->transportCost;
+    }
+
+    private function getItemsTotal(): int
+    {
+        return array_reduce(
+            array_map(fn (OrderItem $item) => $item->getTotal(), $this->items),
+            fn (int $sum, int $total) => $sum += $total,
+            0
+        );
+    }
+}
+```
+
 :x: Bad:
+
+```php
+final class InvalidTest extends TestCase
+{
+    /**
+     * @test
+     * @dataProvider ordersDataProvider
+     */
+    public function get_total_returns_a_total_cost_of_a_whole_order(Order $order, int $expectedTotal): void
+    {
+        self::assertEquals($expectedTotal, $order->getTotal());
+    }
+
+    /**
+     * @test
+     * @dataProvider orderItemsDataProvider
+     */
+    public function get_items_total_returns_a_total_cost_of_all_items(Order $order, int $expectedTotal): void
+    {
+        self::assertEquals($expectedTotal, $this->invokePrivateMethodGetItemsTotal($order));
+    }
+
+    public function ordersDataProvider(): array
+    {
+        return [
+            [new Order([new OrderItem(20), new OrderItem(20), new OrderItem(20)], 15), 75],
+            [new Order([new OrderItem(20), new OrderItem(30), new OrderItem(40)], 0), 90],
+            [new Order([new OrderItem(99), new OrderItem(99), new OrderItem(99)], 9), 306]
+        ];
+    }
+
+    public function orderItemsDataProvider(): array
+    {
+        return [
+            [new Order([new OrderItem(20), new OrderItem(20), new OrderItem(20)], 15), 60],
+            [new Order([new OrderItem(20), new OrderItem(30), new OrderItem(40)], 0), 90],
+            [new Order([new OrderItem(99), new OrderItem(99), new OrderItem(99)], 9), 297]
+        ];
+    }
+
+    private function invokePrivateMethodGetItemsTotal(Order &$order): int
+    {
+        $reflection = new \ReflectionClass(get_class($order));
+        $method = $reflection->getMethod('getItemsTotal');
+        $method->setAccessible(true);
+        return $method->invokeArgs($order, []);
+    }
+}
+```
+
 :heavy_check_mark: Good:
+
+```php
+final class ValidTest extends TestCase
+{
+    /**
+     * @test
+     * @dataProvider ordersDataProvider
+     */
+    public function get_total_returns_a_total_cost_of_a_whole_order(Order $order, int $expectedTotal): void
+    {
+        self::assertEquals($expectedTotal, $order->getTotal());
+    }
+
+    public function ordersDataProvider(): array
+    {
+        return [
+            [new Order([new OrderItem(20), new OrderItem(20), new OrderItem(20)], 15), 75],
+            [new Order([new OrderItem(20), new OrderItem(30), new OrderItem(40)], 0), 90],
+            [new Order([new OrderItem(99), new OrderItem(99), new OrderItem(99)], 9), 306]
+        ];
+    }
+}
+```
 
 ### Time as a volatile dependency
 
 :x: Bad:
+
+```php
+final class Clock
+{
+    public static \DateTime|null $currentDateTime = null;
+
+    public static function getCurrentDateTime(): \DateTime
+    {
+        if (null === self::$currentDateTime) {
+            self::$currentDateTime = new \DateTime();
+        }
+
+        return self::$currentDateTime;
+    }
+
+    public static function set(\DateTime $dateTime): void
+    {
+        self::$currentDateTime = $dateTime;
+    }
+
+    public static function reset(): void
+    {
+        self::$currentDateTime = null;
+    }
+}
+```
+
+```php
+final class Customer
+{
+    private \DateTime $createdAt;
+
+    public function __construct()
+    {
+        $this->createdAt = Clock::getCurrentDateTime();
+    }
+
+    public function isVip(): bool
+    {
+        return $this->createdAt->diff(Clock::getCurrentDateTime())->y >= 1;
+    }
+}
+```
+
+```php
+final class InvalidTest extends TestCase
+{
+    /**
+     * @test
+     */
+    public function a_customer_registered_more_than_a_one_year_ago_is_a_vip(): void
+    {
+        Clock::set(new \DateTime('2019-01-01'));
+        $sut = new Customer();
+        Clock::reset(); // you have to remember about resetting the shared state
+
+        self::assertTrue($sut->isVip());
+    }
+
+    /**
+     * @test
+     */
+    public function a_customer_registered_less_than_a_one_year_ago_is_not_a_vip(): void
+    {
+        Clock::set((new \DateTime())->sub(new \DateInterval('P2M')));
+        $sut = new Customer();
+        Clock::reset(); // you have to remember about resetting the shared state
+
+        self::assertFalse($sut->isVip());
+    }
+}
+```
+
 :heavy_check_mark: Good:
+
+```php
+interface ClockInterface
+{
+    public function getCurrentTime(): \DateTimeImmutable;
+}
+```
+
+```php
+final class Clock implements ClockInterface
+{
+    private function __construct()
+    {
+    }
+
+    public static function create(): self
+    {
+        return new self();
+    }
+
+    public function getCurrentTime(): \DateTimeImmutable
+    {
+        return new \DateTimeImmutable();
+    }
+}
+```
+
+```php
+final class FixedClock implements ClockInterface
+{
+    private function __construct(private \DateTimeImmutable $fixedDate) {}
+
+    public static function create(\DateTimeImmutable $fixedDate): self
+    {
+        return new self($fixedDate);
+    }
+
+    public function getCurrentTime(): \DateTimeImmutable
+    {
+        return $this->fixedDate;
+    }
+}
+```
+
+```php
+final class Customer
+{
+    private \DateTimeImmutable $createdAt;
+
+    public function __construct(\DateTimeImmutable $createdAt)
+    {
+        $this->createdAt = $createdAt;
+    }
+
+    public function isVip(\DateTimeImmutable $currentDate): bool
+    {
+        return $this->createdAt->diff($currentDate)->y >= 1;
+    }
+}
+```
+
+```php
+final class ValidTest extends TestCase
+{
+    /**
+     * @test
+     */
+    public function a_customer_registered_more_than_a_one_year_ago_is_a_vip(): void
+    {
+        $sut = new Customer(FixedClock::create(new \DateTimeImmutable('2019-01-01'))->getCurrentTime());
+
+        self::assertTrue($sut->isVip(FixedClock::create(new \DateTimeImmutable('2020-01-02'))->getCurrentTime()));
+    }
+
+    /**
+     * @test
+     */
+    public function a_customer_registered_less_than_a_one_year_ago_is_not_a_vip(): void
+    {
+        $sut = new Customer(FixedClock::create(new \DateTimeImmutable('2019-01-01'))->getCurrentTime());
+
+        self::assertFalse($sut->isVip(FixedClock::create(new \DateTimeImmutable('2019-05-02'))->getCurrentTime()));
+    }
+}
+```
