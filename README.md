@@ -39,9 +39,9 @@ Test doubles are fake dependencies used in tests.
 
 ### Stubs
 
-A dummy is a just simple implementation which does nothing.
-
 #### Dummy
+
+A dummy is a just simple implementation which does nothing.
 
 ```php
 final class Mailer implements MailerInterface
@@ -52,9 +52,9 @@ final class Mailer implements MailerInterface
 }
 ```
 
-A fake is a simplified implementation to simulate the original behaviour.
-
 #### Fake
+
+A fake is a simplified implementation to simulate the original behaviour.
 
 ```php
 final class InMemoryCustomerRepository implements CustomerRepositoryInterface
@@ -96,9 +96,9 @@ final class InMemoryCustomerRepository implements CustomerRepositoryInterface
 }
 ```
 
-A stub is the simplest implementation with a hardcoded behaviour.
-
 #### Stub
+
+A stub is the simplest implementation with a hardcoded behaviour.
 
 ```php
 final class UniqueEmailSpecificationStub implements UniqueEmailSpecificationInterface
@@ -117,9 +117,10 @@ $specificationStub->method('isUnique')->willReturn(true);
 
 ### Mocks
 
+#### Spy
+
 A spy is an implementation to verify a specific behaviour.
 
-#### Spy
 ```php
 final class Mailer implements MailerInterface
 {
