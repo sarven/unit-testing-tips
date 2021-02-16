@@ -1442,7 +1442,7 @@ class ApplicationService
 }
 ```
 
-:heavy_check_mark: It's required to split up overcomplicated code to separate classes.
+:heavy_check_mark: It's required to split up an overcomplicated code to separate classes.
 
 ```php
 final class ApplicationService
