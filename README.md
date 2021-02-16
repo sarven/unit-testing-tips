@@ -1409,7 +1409,118 @@ final class SubscriptionSuspendingTest extends TestCase
 
 ## Humble pattern
 
-[TODO]
+How to properly unit test a class like this?
+
+```php
+class ApplicationService
+{
+    public function __construct(
+        private OrderRepository $orderRepository,
+        private FormRepository $formRepository
+    ) {}
+
+    public function changeFormStatus(int $orderId): void
+    {
+        $order = $this->orderRepository->getById($orderId);
+        $soapResponse = $this->getSoapClient()->getStatusByOrderId($orderId);
+        $form = $this->formRepository->getByOrderId($orderId);
+        $form->setStatus($soapResponse['status']);
+        $form->setModifiedAt(new \DateTimeImmutable());
+
+        if ($soapResponse['status'] === 'accepted') {
+            $order->setStatus('paid');
+        }
+
+        $this->formRepository->save($form);
+        $this->orderRepository->save($order);
+    }
+
+    private function getSoapClient(): \SoapClient
+    {
+        return new \SoapClient('https://legacy_system.pl/Soap/WebService', []);
+    }
+}
+```
+
+:heavy_check_mark: It's required to split up overcomplicated code to separate classes.
+
+```php
+final class ApplicationService
+{
+    public function __construct(
+        private OrderRepositoryInterface $orderRepository,
+        private FormRepositoryInterface $formRepository,
+        private FormApiInterface $formApi,
+        private ChangeFormStatusService $changeFormStatusService
+    ) {}
+
+    public function changeFormStatus(int $orderId): void
+    {
+        $order = $this->orderRepository->getById($orderId);
+        $form = $this->formRepository->getByOrderId($orderId);
+        $status = $this->formApi->getStatusByOrderId($orderId);
+
+        $this->changeFormStatusService->changeStatus($order, $form, $status);
+
+        $this->formRepository->save($form);
+        $this->orderRepository->save($order);
+    }
+}
+```
+
+```php
+final class ChangeFormStatusService
+{
+    public function changeStatus(Order $order, Form $form, string $formStatus): void
+    {
+        $status = FormStatus::createFromString($formStatus);
+        $form->changeStatus($status);
+
+        if ($form->isAccepted()) {
+            $order->changeStatus(OrderStatus::paid());
+        }
+    }
+}
+```
+
+```php
+final class ChangingFormStatusTest extends TestCase
+{
+    /**
+     * @test
+     */
+    public function changing_a_form_status_to_accepted_changes_an_order_status_to_paid(): void
+    {
+        $order = new Order();
+        $form = new Form();
+        $status = 'accepted';
+        $sut = new ChangeFormStatusService();
+
+        $sut->changeStatus($order, $form, $status);
+
+        self::assertTrue($form->isAccepted());
+        self::assertTrue($order->isPaid());
+    }
+
+    /**
+     * @test
+     */
+    public function changing_a_form_status_to_refused_not_changes_an_order_status(): void
+    {
+        $order = new Order();
+        $form = new Form();
+        $status = 'new';
+        $sut = new ChangeFormStatusService();
+
+        $sut->changeStatus($order, $form, $status);
+
+        self::assertFalse($form->isAccepted());
+        self::assertFalse($order->isPaid());
+    }
+}
+```
+
+However, ApplicationService probably should be tested by an integration test with only mocked FormApiInterface.
 
 ## Trivial test
 
