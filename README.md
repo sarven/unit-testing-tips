@@ -1409,6 +1409,8 @@ final class SubscriptionSuspendingTest extends TestCase
 
 ## Humble pattern
 
+[TODO]
+
 ## Trivial test
 
 :x: Bad:
@@ -1543,7 +1545,109 @@ final class TestUserRepository extends TestCase
 
 ## Test fixtures
 
-## Testing
+:x: Bad:
+
+```php
+final class InvalidTest extends TestCase
+{
+    private ?Subscription $subscription;
+
+    public function setUp(): void
+    {
+        $this->subscription = new Subscription(new \DateTimeImmutable());
+        $this->subscription->activate();
+    }
+
+    /**
+     * @test
+     */
+    public function suspending_an_active_subscription_with_cannot_suspend_new_policy_is_possible(): void
+    {
+        $result = $this->subscription->suspend(new CannotSuspendNewSubscriptionPolicy(), new \DateTimeImmutable());
+
+        self::assertTrue($result);
+    }
+
+    /**
+     * @test
+     */
+    public function suspending_an_active_subscription_with_cannot_suspend_expired_policy_is_possible(): void
+    {
+        $result = $this->subscription->suspend(new CannotSuspendExpiredSubscriptionPolicy(), new \DateTimeImmutable());
+
+        self::assertTrue($result);
+    }
+
+    /**
+     * @test
+     */
+    public function suspending_a_new_subscription_with_cannot_suspend_new_policy_is_not_possible(): void
+    {
+        // Here we need to create a new subscription, it is not possible to change $this->subscription to a new subscription
+        self::assertTrue(true);
+    }
+}
+```
+
+:heavy_check_mark: Good:
+
+```php
+final class ValidTest extends TestCase
+{
+    /**
+     * @test
+     */
+    public function suspending_an_active_subscription_with_cannot_suspend_new_policy_is_possible(): void
+    {
+        $sut = $this->createAnActiveSubscription();
+
+        $result = $sut->suspend(new CannotSuspendNewSubscriptionPolicy(), new \DateTimeImmutable());
+
+        self::assertTrue($result);
+    }
+
+    /**
+     * @test
+     */
+    public function suspending_an_active_subscription_with_cannot_suspend_expired_policy_is_possible(): void
+    {
+        $sut = $this->createAnActiveSubscription();
+
+        $result = $sut->suspend(new CannotSuspendExpiredSubscriptionPolicy(), new \DateTimeImmutable());
+
+        self::assertTrue($result);
+    }
+
+    /**
+     * @test
+     */
+    public function suspending_a_new_subscription_with_cannot_suspend_new_policy_is_not_possible(): void
+    {
+        $sut = $this->createANewSubscription();
+
+        $result = $sut->suspend(new CannotSuspendNewSubscriptionPolicy(), new \DateTimeImmutable());
+
+        self::assertFalse($result);
+    }
+
+    private function createANewSubscription(): Subscription
+    {
+        return new Subscription(new \DateTimeImmutable());
+    }
+
+    private function createAnActiveSubscription(): Subscription
+    {
+        $subscription = new Subscription(new \DateTimeImmutable());
+        $subscription->activate();
+        return $subscription;
+    }
+}
+```
+
+- It's better to avoid a shared state between tests.
+- To reuse elements between a few tests:
+    * private factory methods - reusing in one class (like above)
+    * [Object mother]((#object-mother)) - reusing in a few classes
 
 ## General testing anti-patterns
 
