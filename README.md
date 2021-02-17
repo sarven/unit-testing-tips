@@ -1192,6 +1192,8 @@ class SubscriptionTest extends TestCase
 }
 ```
 
+:exclamation: **Do not write code 1:1, 1 class : 1 test. It leads to fragile tests which make that refactoring is very hard.**
+
 :heavy_check_mark: Good:
 
 ```php
