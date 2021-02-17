@@ -661,6 +661,9 @@ final class NameService
 an infrastructure code related with a file system.**
 
 :heavy_check_mark: Good:
+
+Like in functional architecture we need to separate a code that has side effects and code which contains only logic.
+
 ```php
 final class NameParser
 {
@@ -729,6 +732,7 @@ final class ValidUnitExampleTest extends TestCase
         $sut = new NameParser();
 
         $result = $sut->parse($namesData);
+        
         self::assertEquals(
             [
                 new Name('John', new Gender('M')),
