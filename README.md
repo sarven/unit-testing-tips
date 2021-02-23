@@ -120,7 +120,7 @@ final class UniqueEmailSpecificationStub implements UniqueEmailSpecificationInte
 ```
 
 ```php
-$specificationStub = $this->createMock(UniqueEmailSpecificationInterface::class);
+$specificationStub = $this->createStub(UniqueEmailSpecificationInterface::class);
 $specificationStub->method('isUnique')->willReturn(true);
 ```
 
@@ -421,7 +421,7 @@ final class TestExample extends TestCase
      */
     public function suspending_an_subscription_with_can_always_suspend_policy_is_always_possible(): void
     {
-        $canAlwaysSuspendPolicy = $this->createMock(SuspendingPolicyInterface::class);
+        $canAlwaysSuspendPolicy = $this->createStub(SuspendingPolicyInterface::class);
         $canAlwaysSuspendPolicy->method('suspend')->willReturn(true);
         $sut = new Subscription();
 
@@ -500,7 +500,7 @@ final class TestExample extends TestCase
     {
         $message1 = new Message();
         $message2 = new Message();
-        $messageRepository = $this->createMock(MessageRepositoryInterface::class);
+        $messageRepository = $this->createStub(MessageRepositoryInterface::class);
         $messageRepository->method('getAll')->willReturn([$message1, $message2]);
         $mailer = $this->createMock(MailerInterface::class);
         $sut = new NotificationService($mailer, $messageRepository);
@@ -618,7 +618,7 @@ final class ExampleTest extends TestCase
     {
         $message1 = new Message();
         $message2 = new Message();
-        $messageRepository = $this->createMock(MessageRepositoryInterface::class);
+        $messageRepository = $this->createStub(MessageRepositoryInterface::class);
         $messageRepository->method('getAll')->willReturn([$message1, $message2]);
         $mailer = $this->createMock(MailerInterface::class);
         $sut = new NotificationService($mailer, $messageRepository);
@@ -970,7 +970,7 @@ class CannotSuspendExpiredSubscriptionPolicyTest extends TestCase
     public function it_returns_true_when_a_subscription_is_expired(): void
     {
         $policy = new CannotSuspendExpiredSubscriptionPolicy();
-        $subscription = $this->createMock(Subscription::class);
+        $subscription = $this->createStub(Subscription::class);
         $subscription->method('isExpired')->willReturn(true);
 
         self::assertFalse($policy->suspend($subscription, new \DateTimeImmutable()));
@@ -982,7 +982,7 @@ class CannotSuspendExpiredSubscriptionPolicyTest extends TestCase
     public function it_returns_false_when_a_subscription_is_not_expired(): void
     {
         $policy = new CannotSuspendExpiredSubscriptionPolicy();
-        $subscription = $this->createMock(Subscription::class);
+        $subscription = $this->createStub(Subscription::class);
         $subscription->method('isExpired')->willReturn(false);
 
         self::assertTrue($policy->suspend($subscription, new \DateTimeImmutable()));
@@ -1013,7 +1013,7 @@ class CannotSuspendNewSubscriptionPolicyTest extends TestCase
     public function it_returns_false_when_a_subscription_is_new(): void
     {
         $policy = new CannotSuspendNewSubscriptionPolicy();
-        $subscription = $this->createMock(Subscription::class);
+        $subscription = $this->createStub(Subscription::class);
         $subscription->method('isNew')->willReturn(true);
 
         self::assertFalse($policy->suspend($subscription, new \DateTimeImmutable()));
@@ -1025,7 +1025,7 @@ class CannotSuspendNewSubscriptionPolicyTest extends TestCase
     public function it_returns_true_when_a_subscription_is_not_new(): void
     {
         $policy = new CannotSuspendNewSubscriptionPolicy();
-        $subscription = $this->createMock(Subscription::class);
+        $subscription = $this->createStub(Subscription::class);
         $subscription->method('isNew')->willReturn(false);
 
         self::assertTrue($policy->suspend($subscription, new \DateTimeImmutable()));
@@ -2044,7 +2044,7 @@ final class ValidTest extends TestCase
      */
     public function testGetTotalPriceWithDiscount(int $totalPrice, int $vipDaysFrom, int $expected): void
     {
-        $externalDiscountCalculator = $this->createMock(ExternalDiscountCalculatorInterface::class);
+        $externalDiscountCalculator = $this->createStub(ExternalDiscountCalculatorInterface::class);
         $externalDiscountCalculator->method('calculate')->willReturn(5);
         $sut = new OrderService(new InternalDiscountCalculator(), $externalDiscountCalculator);
 
