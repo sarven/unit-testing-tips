@@ -27,8 +27,8 @@ So in these examples, I will try to share some tips on what to do to write good 
     * [State](#state)
     * [Communication](#communication)
 10. [Functional architecture and tests](#functional-architecture-and-tests)
-11. [Observable behaviour vs implementation details](#observable-behaviour-vs-implementation-details)
-12. [Unit of behaviour](#unit-of-behaviour)
+11. [Observable behavior vs implementation details](#observable-behavior-vs-implementation-details)
+12. [Unit of behavior](#unit-of-behavior)
 13. [Humble pattern](#humble-pattern)
 14. [Trivial test](#trivial-test)
 15. [Fragile test](#fragile-test)
@@ -50,7 +50,7 @@ Test doubles are fake dependencies used in tests.
 
 #### Dummy
 
-A dummy is a just simple implementation which does nothing.
+A dummy is a just simple implementation that does nothing.
 
 ```php
 final class Mailer implements MailerInterface
@@ -63,7 +63,7 @@ final class Mailer implements MailerInterface
 
 #### Fake
 
-A fake is a simplified implementation to simulate the original behaviour.
+A fake is a simplified implementation to simulate the original behavior.
 
 ```php
 final class InMemoryCustomerRepository implements CustomerRepositoryInterface
@@ -107,7 +107,7 @@ final class InMemoryCustomerRepository implements CustomerRepositoryInterface
 
 #### Stub
 
-A stub is the simplest implementation with a hardcoded behaviour.
+A stub is the simplest implementation with a hardcoded behavior.
 
 ```php
 final class UniqueEmailSpecificationStub implements UniqueEmailSpecificationInterface
@@ -128,7 +128,7 @@ $specificationStub->method('isUnique')->willReturn(true);
 
 #### Spy
 
-A spy is an implementation to verify a specific behaviour.
+A spy is an implementation to verify a specific behavior.
 
 ```php
 final class Mailer implements MailerInterface
@@ -186,7 +186,7 @@ public function test(): void
 }
 ```
 
-:heavy_check_mark: **Specify explicitly what are you testing**
+:heavy_check_mark: **Specify explicitly what you are testing**
 ```php
 public function sut(): void
 {
@@ -219,8 +219,8 @@ public function testDeactivateASubscription(): void
 
 :heavy_check_mark: Better:  
 - **Using underscore improves readability**
-- **The name should describe the behaviour, not the implementation**
-- **Use names without technical keywords. It should be readable for non-programmer person.**
+- **The name should describe the behavior, not the implementation**
+- **Use names without technical keywords. It should be readable for a non-programmer person.**
 
 ```php
 public function sign_in_with_invalid_credentials_is_not_possible(): void
@@ -244,7 +244,7 @@ public function deactivating_an_inactive_subscription_is_invalid(): void
 }
 ```
 
-:information_source: Describing the behaviour is important in testing the domain scenarios. 
+:information_source: Describing the behavior is important in testing the domain scenarios. 
 If your code is just a utility one it's less important.
 
 ## AAA pattern
@@ -256,7 +256,7 @@ It's also common Given, When, Then.
 - **Arrange**: Bring the system under test in the desired state. Prepare dependencies, arguments and finally construct
 the SUT.
 - **Act**: Invoke a tested element.
-- **Assert**: Verify the result, the final state or the communication with collaborators.
+- **Assert**: Verify the result, the final state, or the communication with collaborators.
 
 ```php
 public function aaa_pattern_example_test(): void
@@ -328,7 +328,7 @@ final class ExampleTest
 
 The parameterized test is a good option to test the SUT with a lot of parameters without repeating the code.  
 
-:thumbsdown: This kind of test is less readable. To increase a little the readability negative and positive examples should be
+:thumbsdown: This kind of test is less readable. To increase the readability a little, negative and positive examples should be
 split up to different tests.
 
 ```php
@@ -386,8 +386,8 @@ final class ExampleTest extends TestCase
 
 ### Classical (Detroit school)
 
-- The unit as a single unit of behaviour, it can be a few related classes. 
-- Every test should be isolated from others. So it must be possible to invoke them in parallel or in a any order.
+- The unit is a single unit of behavior, it can be a few related classes. 
+- Every test should be isolated from others. So it must be possible to invoke them in parallel or in any order.
 
 ```php
 final class TestExample extends TestCase
@@ -410,7 +410,7 @@ final class TestExample extends TestCase
 
 ### Mockist (London school)
 
-- The unit as a single class.
+- The unit is a single class.
 - The unit should be isolated from all collaborators.
 
 ```php
@@ -434,7 +434,7 @@ final class TestExample extends TestCase
 ```
 
 :information_source:
-**The classical approach is better in order to avoid fragile tests.**
+**The classical approach is better to avoid fragile tests.**
 
 ### Dependencies
 
@@ -505,7 +505,7 @@ final class TestExample extends TestCase
         $mailer = $this->createMock(MailerInterface::class);
         $sut = new NotificationService($mailer, $messageRepository);
 
-        // Removed an asserting interactions with the stub
+        // Removed asserting interactions with the stub
         $mailer->expects(self::exactly(2))->method('send')
             ->withConsecutive([self::equalTo($message1)], [self::equalTo($message2)]);
 
@@ -522,7 +522,7 @@ final class TestExample extends TestCase
 - **The best resistance to refactoring**
 - **The best accuracy**
 - **The lowest cost of maintainability**  
-- **If it is possible you should prefer this kind of test**
+- **If it is possible, you should prefer this kind of test**
 
 ```php
 final class ExampleTest extends TestCase
@@ -657,12 +657,12 @@ final class NameService
 }
 ```
 
-**How to test a code like this? It is possible only with an integration test, because there is directly used 
-an infrastructure code related with a file system.**
+**How to test a code like this? It is possible only with an integration test because it directly uses
+an infrastructure code related to a file system.**
 
 :heavy_check_mark: Good:
 
-Like in functional architecture we need to separate a code that has side effects and code which contains only logic.
+Like in the functional architecture we need to separate a code that has side effects and code which contains only logic.
 
 ```php
 final class NameParser
@@ -745,7 +745,7 @@ final class ValidUnitExampleTest extends TestCase
 }
 ```
 
-## Observable behaviour vs implementation details
+## Observable behavior vs implementation details
 
 :x: Bad:
 
@@ -919,8 +919,8 @@ final class ValidTestExample extends TestCase
 
         $result = $sut->renewSubscription(1);
 
-        // skip checking modifiedAt as it's not a part of observable behaviour. To check this value we
-        // would have to add getter for modifiedAt, probably only for tests purposes.
+        // skip checking modifiedAt as it's not a part of observable behavior. To check this value we
+        // would have to add a getter for modifiedAt, probably only for test purposes.
         self::assertTrue($expiredSubscription->isActive());
         self::assertTrue($result);
     }
@@ -943,7 +943,7 @@ final class ValidTestExample extends TestCase
 }
 ```
 
-## Unit of behaviour
+## Unit of behavior
 
 :x: Bad:
 
