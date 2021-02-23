@@ -247,6 +247,17 @@ public function deactivating_an_inactive_subscription_is_invalid(): void
 :information_source: Describing the behavior is important in testing the domain scenarios. 
 If your code is just a utility one it's less important.
 
+:question: Why would it be useful for a non-programmer to read unit tests?  
+
+If there is a project with complex domain logic, this logic must be very clear for everyone, 
+so then tests describe domain details without technical keywords, and you can talk with a business in a language like in these tests.
+
+All code that is related to the domain should be free from technical details. A non-programmer won't be read these tests, 
+but if you want to talk about the domain these tests will be useful to know what this domain does. 
+There will be a description without technical details e.g. returns null, throws an exception, etc. 
+This kind of information has nothing to do with the domain, so we shouldn't use these keywords.
+
+
 ## AAA pattern
 
 It's also common Given, When, Then.
