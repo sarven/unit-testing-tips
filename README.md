@@ -40,6 +40,7 @@ So in these examples, I will try to share some tips on what to do to write good 
     * [Testing private methods](#testing-private-methods)
     * [Time as a volatile dependency](#time-as-a-volatile-dependency)
 18. [100% Test Coverage shouldn't be the goal](#test-coverage)
+19. [Recommended books](#recommended-books)
 
 ## Introduction
 
@@ -2357,3 +2358,8 @@ final class ValidTest extends TestCase
 100% Coverage is not the goal or even is undesirable because if there is 100% coverage, tests probably will be very fragile, which means refactoring will be very hard.
 Mutation testing gives better feedback about the quality of tests.
 [Read more](https://sarvendev.com/en/2019/06/mutation-testing-we-are-testing-tests/)
+
+## Recommended books
+
+- [Test Driven Development: By Example / Kent Beck](https://www.amazon.com/gp/product/0321146530/)  - the classic
+- [Unit Testing Principles, Practices, and Patterns / Vladimir Khorikov](https://www.amazon.com/Unit-Testing-Principles-Practices-Patterns/dp/1617296279) - the best book about tests I've ever read
