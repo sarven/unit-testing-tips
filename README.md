@@ -39,7 +39,7 @@ So in these examples, I will try to share some tips on what to do to write good 
     * [Mocking concrete classes](#mocking-concrete-classes)
     * [Testing private methods](#testing-private-methods)
     * [Time as a volatile dependency](#time-as-a-volatile-dependency)
-18. [The Test Coverage shouldn't be the goal](#test-coverage)
+18. [100% Test Coverage shouldn't be the goal](#test-coverage)
 
 ## Introduction
 
