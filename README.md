@@ -39,6 +39,7 @@ So in these examples, I will try to share some tips on what to do to write good 
     * [Mocking concrete classes](#mocking-concrete-classes)
     * [Testing private methods](#testing-private-methods)
     * [Time as a volatile dependency](#time-as-a-volatile-dependency)
+18. [The Test Coverage shouldn't be the goal](#test-coverage)
 
 ## Introduction
 
@@ -2350,3 +2351,9 @@ final class ValidTest extends TestCase
     }
 }
 ```
+
+## 100% Test Coverage shouldn't be the goal  
+
+100% Coverage is not the goal or even is undesirable because if there is 100% coverage, tests probably will be very fragile, which means refactoring will be very hard.
+Mutation testing gives better feedback about the quality of tests.
+[Read more](https://sarvendev.com/en/2019/06/mutation-testing-we-are-testing-tests/)
