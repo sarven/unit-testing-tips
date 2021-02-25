@@ -1685,6 +1685,8 @@ final class TestUserRepository extends TestCase
 }
 ```
 
+:heavy_check_mark: Testing repositories in that way leads to fragile tests and then refactoring is very hard. To test repositories write integration tests.
+
 ## Test fixtures
 
 :x: Bad:
