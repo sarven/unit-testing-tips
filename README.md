@@ -1613,7 +1613,7 @@ final class EventSubscriberTest extends TestCase
 }
 ```
 
-:heavy_check_mark: Testing the code without any complicated logic is senseless, but also leads to fragile tests.
+:exclamation: Testing the code without any complicated logic is senseless, but also leads to fragile tests.
 
 ## Fragile test
 
@@ -1685,7 +1685,7 @@ final class TestUserRepository extends TestCase
 }
 ```
 
-:heavy_check_mark: Testing repositories in that way leads to fragile tests and then refactoring is very hard. To test repositories write integration tests.
+:exclamation: Testing repositories in that way leads to fragile tests and then refactoring is very hard. To test repositories write integration tests.
 
 ## Test fixtures
 
@@ -2193,6 +2193,8 @@ final class ValidTest extends TestCase
     }
 }
 ```
+
+:exclamation: Tests should only verify public API.
 
 ### Time as a volatile dependency
 
