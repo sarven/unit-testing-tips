@@ -1886,6 +1886,10 @@ final class ValidTest extends TestCase
 }
 ```
 
+:exclamation: Adding additional production code (e.g. getter getCustomerType()) only to verify the state in tests is a bad practice.
+It should be verified by another domain significant value (in this case getPercentageDiscount()). Of course, sometimes it can be very hard
+to find another way to verify the operation, and we can be forced to add additional production code to verify correctness in tests, but we should try to avoid that.
+
 ### Leaking domain details
 
 ```php
