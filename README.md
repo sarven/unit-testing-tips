@@ -1613,6 +1613,8 @@ final class EventSubscriberTest extends TestCase
 }
 ```
 
+:heavy_check_mark: Testing the code without any complicated logic is senseless, but also leads to fragile tests.
+
 ## Fragile test
 
 :x: Bad:
