@@ -2085,6 +2085,8 @@ final class ValidTest extends TestCase
 }
 ```
 
+:information_source: The necessity to mock a concrete class to replace a part of its behavior means that this class is probably too complicated and violates the Single Responsibility Principle.
+
 ### Testing private methods
 
 ```php
