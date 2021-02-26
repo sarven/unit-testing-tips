@@ -1957,6 +1957,8 @@ final class ValidTest extends TestCase
 }
 ```
 
+:information_source: Don't duplicate the production logic in tests. Just verify results by hardcoded values.
+
 ### Mocking concrete classes
 
 :x: Bad:
