@@ -2206,6 +2206,8 @@ final class ValidTest extends TestCase
 
 ### Time as a volatile dependency
 
+:information_source: The time is a volatile dependency because is non-deterministic, each invocation returns a different result.
+
 :x: Bad:
 
 ```php
@@ -2366,6 +2368,9 @@ final class ValidTest extends TestCase
     }
 }
 ```
+
+:information_source: The time and random numbers should not be generated directly in the domain code. To test behavior we must have
+deterministic results, so we need to inject these values into a domain object like in the example above.
 
 ## 100% Test Coverage shouldn't be the goal  
 
