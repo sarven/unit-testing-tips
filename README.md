@@ -956,6 +956,10 @@ final class ValidTestExample extends TestCase
 }
 ```
 
+:information_source: The first subscription model has a bad design. To invoke one business operation you need to call three methods. Also using getters to verify operation is not a good practice.
+In this case, it's skipped checking a change of modifiedAt, probably setting specific modifiedAt during a renew operation can be tested with an expiration business operation. The getter for modifiedAt is not required.
+Of course, there are cases where finding the possibility to avoid getters provided only for tests will be very hard, but always we should try to not introduce them.
+
 ## Unit of behavior
 
 :x: Bad:
