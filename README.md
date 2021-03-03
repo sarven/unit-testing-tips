@@ -1,4 +1,4 @@
-# [Work in progress] Unit testing tips by examples in PHP
+# Unit testing tips by examples in PHP
 
 ## Introduction
 
