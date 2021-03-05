@@ -184,7 +184,7 @@ public function test(): void
 
     $subscription->activate();
 
-    self::assertEquals(Status::activated(), $subscription->status());
+    self::assertSame(Status::activated(), $subscription->status());
 }
 ```
 
@@ -197,7 +197,7 @@ public function sut(): void
 
     $sut->activate();
 
-    self::assertEquals(Status::activated(), $sut->status());
+    self::assertSame(Status::activated(), $sut->status());
 }
 ``` 
 
@@ -281,7 +281,7 @@ public function aaa_pattern_example_test(): void
     $sut->activate();
 
     //Assert|Then
-    self::assertEquals(Status::activated(), $sut->status());
+    self::assertSame(Status::activated(), $sut->status());
 }
 ```
 
@@ -357,7 +357,7 @@ final class ExampleTest extends TestCase
 
         $result = $sut->isValid($email);
 
-        self::assertEquals(false, $result);
+        self::assertFalse($result);
     }
 
     /**
@@ -370,7 +370,7 @@ final class ExampleTest extends TestCase
 
         $result = $sut->isValid($email);
 
-        self::assertEquals(true, $result);
+        self::assertTrue($result);
     }
 
     public function getInvalidEmails(): array
@@ -416,7 +416,7 @@ final class TestExample extends TestCase
         $result = $sut->suspend($canAlwaysSuspendPolicy);
 
         self::assertTrue($result);
-        self::assertEquals(Status::suspend(), $sut->status());
+        self::assertSame(Status::suspend(), $sut->status());
     }
 }
 ```
@@ -441,7 +441,7 @@ final class TestExample extends TestCase
         $result = $sut->suspend($canAlwaysSuspendPolicy);
 
         self::assertTrue($result);
-        self::assertEquals(Status::suspend(), $sut->status());
+        self::assertSame(Status::suspend(), $sut->status());
     }
 }
 ```
@@ -550,7 +550,7 @@ final class ExampleTest extends TestCase
 
         $result = $sut->isValid($email);
 
-        self::assertEquals(false, $result);
+        self::assertFalse($result);
     }
 
     /**
@@ -563,7 +563,7 @@ final class ExampleTest extends TestCase
 
         $result = $sut->isValid($email);
 
-        self::assertEquals(true, $result);
+        self::assertTrue($result);
     }
 
     public function getInvalidEmails(): array
@@ -608,8 +608,8 @@ final class ExampleTest extends TestCase
 
         $sut->addItem($item);
 
-        self::assertEquals(1, $sut->getCount());
-        self::assertEquals($item, $sut->getItems()[0]);
+        self::assertSame(1, $sut->getCount());
+        self::assertSame($item, $sut->getItems()[0]);
     }
 }
 ```
@@ -746,7 +746,7 @@ final class ValidUnitExampleTest extends TestCase
 
         $result = $sut->parse($namesData);
         
-        self::assertEquals(
+        self::assertSame(
             [
                 new Name('John', new Gender('M')),
                 new Name('Lennon', new Gender('U')),
@@ -833,7 +833,7 @@ final class InvalidTestExample extends TestCase
 
         $result = $sut->renewSubscription(1);
 
-        self::assertEquals(Status::active(), $expiredSubscription->getStatus());
+        self::assertSame(Status::active(), $expiredSubscription->getStatus());
         self::assertGreaterThan($modifiedAt, $expiredSubscription->getModifiedAt());
         self::assertTrue($result);
     }
@@ -851,7 +851,7 @@ final class InvalidTestExample extends TestCase
 
         $result = $sut->renewSubscription(1);
 
-        self::assertEquals($modifiedAt, $activeSubscription->getModifiedAt());
+        self::assertSame($modifiedAt, $activeSubscription->getModifiedAt());
         self::assertFalse($result);
     }
 }
@@ -1585,7 +1585,7 @@ final class CustomerTest extends TestCase
 
         $customer->setName('John');
 
-        self::assertEquals('John', $customer->getName());
+        self::assertSame('John', $customer->getName());
     }
 }
 ```
@@ -1612,7 +1612,7 @@ final class EventSubscriberTest extends TestCase
     {
         $result = EventSubscriber::getSubscribedEvents();
 
-        self::assertEquals(['event' => 'onEvent'], $result);
+        self::assertSame(['event' => 'onEvent'], $result);
     }
 }
 ```
@@ -1684,7 +1684,7 @@ final class TestUserRepository extends TestCase
 
         $result = $userRepository->getUserNameByEmail($email);
 
-        self::assertEquals(['email' => $email], $result);
+        self::assertSame(['email' => $email], $result);
     }
 }
 ```
@@ -1841,7 +1841,7 @@ final class InvalidTest extends TestCase
         $sut = new Customer();
         $sut->makeVip();
 
-        self::assertEquals(CustomerType::VIP(), $sut->getCustomerType());
+        self::assertSame(CustomerType::VIP(), $sut->getCustomerType());
     }
 }
 ```
@@ -1885,7 +1885,7 @@ final class ValidTest extends TestCase
         $sut = new Customer();
         $sut->makeVip();
 
-        self::assertEquals(25, $sut->getPercentageDiscount());
+        self::assertSame(25, $sut->getPercentageDiscount());
     }
 }
 ```
@@ -1919,7 +1919,7 @@ final class InvalidTest extends TestCase
     {
         $sut = new DiscountCalculator();
 
-        self::assertEquals($expected, $sut->calculate($vipDaysFrom));
+        self::assertSame($expected, $sut->calculate($vipDaysFrom));
     }
 
     public function discountDataProvider(): array
@@ -1946,7 +1946,7 @@ final class ValidTest extends TestCase
     {
         $sut = new DiscountCalculator();
 
-        self::assertEquals($expected, $sut->calculate($vipDaysFrom));
+        self::assertSame($expected, $sut->calculate($vipDaysFrom));
     }
 
     public function discountDataProvider(): array
@@ -2011,7 +2011,7 @@ final class InvalidTest extends TestCase
         $discountCalculator->method('calculateAdditionalDiscountFromExternalSystem')->willReturn(5);
         $sut = new OrderService($discountCalculator);
 
-        self::assertEquals($expected, $sut->getTotalPriceWithDiscount($totalPrice, $vipDaysFrom));
+        self::assertSame($expected, $sut->getTotalPriceWithDiscount($totalPrice, $vipDaysFrom));
     }
 
     public function orderDataProvider(): array
@@ -2075,7 +2075,7 @@ final class ValidTest extends TestCase
         $externalDiscountCalculator->method('calculate')->willReturn(5);
         $sut = new OrderService(new InternalDiscountCalculator(), $externalDiscountCalculator);
 
-        self::assertEquals($expected, $sut->getTotalPriceWithDiscount($totalPrice, $vipDaysFrom));
+        self::assertSame($expected, $sut->getTotalPriceWithDiscount($totalPrice, $vipDaysFrom));
     }
 
     public function orderDataProvider(): array
@@ -2141,7 +2141,7 @@ final class InvalidTest extends TestCase
      */
     public function get_total_returns_a_total_cost_of_a_whole_order(Order $order, int $expectedTotal): void
     {
-        self::assertEquals($expectedTotal, $order->getTotal());
+        self::assertSame($expectedTotal, $order->getTotal());
     }
 
     /**
@@ -2150,7 +2150,7 @@ final class InvalidTest extends TestCase
      */
     public function get_items_total_returns_a_total_cost_of_all_items(Order $order, int $expectedTotal): void
     {
-        self::assertEquals($expectedTotal, $this->invokePrivateMethodGetItemsTotal($order));
+        self::assertSame($expectedTotal, $this->invokePrivateMethodGetItemsTotal($order));
     }
 
     public function ordersDataProvider(): array
@@ -2192,7 +2192,7 @@ final class ValidTest extends TestCase
      */
     public function get_total_returns_a_total_cost_of_a_whole_order(Order $order, int $expectedTotal): void
     {
-        self::assertEquals($expectedTotal, $order->getTotal());
+        self::assertSame($expectedTotal, $order->getTotal());
     }
 
     public function ordersDataProvider(): array
