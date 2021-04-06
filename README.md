@@ -981,7 +981,7 @@ class CannotSuspendExpiredSubscriptionPolicyTest extends TestCase
     /**
      * @test
      */
-    public function it_returns_true_when_a_subscription_is_expired(): void
+    public function it_returns_false_when_a_subscription_is_expired(): void
     {
         $policy = new CannotSuspendExpiredSubscriptionPolicy();
         $subscription = $this->createStub(Subscription::class);
@@ -993,7 +993,7 @@ class CannotSuspendExpiredSubscriptionPolicyTest extends TestCase
     /**
      * @test
      */
-    public function it_returns_false_when_a_subscription_is_not_expired(): void
+    public function it_returns_true_when_a_subscription_is_not_expired(): void
     {
         $policy = new CannotSuspendExpiredSubscriptionPolicy();
         $subscription = $this->createStub(Subscription::class);
