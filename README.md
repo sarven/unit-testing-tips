@@ -2,11 +2,11 @@
 
 ## Introduction
 
-In these times the benefits of writing unit tests are huge.
+In these times, the benefits of writing unit tests are huge.
 I think that most of the recently started projects contain any unit tests.
 In enterprise applications with a lot of business logic, unit tests are the most important tests,
 because they are fast and can us instantly assure that our implementation is correct.
-However, I often see a problem with good tests in projects, though the benefits of these tests are only huge when you have good unit tests.
+However, I often see a problem with good tests in projects, though these tests' benefits are only huge when you have good unit tests.
 So in these examples, I will try to share some tips on what to do to write good unit tests.
 
 ## Table of Contents
@@ -41,8 +41,6 @@ So in these examples, I will try to share some tips on what to do to write good 
     * [Time as a volatile dependency](#time-as-a-volatile-dependency)
 18. [100% Test Coverage shouldn't be the goal](#100-test-coverage-shouldnt-be-the-goal)
 19. [Recommended books](#recommended-books)
-
-## Introduction
 
 ## Test doubles
 
@@ -171,7 +169,7 @@ $mailer
 ```
 
 :exclamation: 
-To verify incoming interactions use a stub, but to verify outcoming interactions use a mock. 
+To verify incoming interactions, use a stub, but to verify outcoming interactions, use a mock. 
 More: [Mock vs Stub](#mock-vs-stub)
 
 ## Naming
@@ -184,7 +182,7 @@ public function test(): void
 
     $subscription->activate();
 
-    self::assertEquals(Status::activated(), $subscription->status());
+    self::assertSame(Status::activated(), $subscription->status());
 }
 ```
 
@@ -197,7 +195,7 @@ public function sut(): void
 
     $sut->activate();
 
-    self::assertEquals(Status::activated(), $sut->status());
+    self::assertSame(Status::activated(), $sut->status());
 }
 ``` 
 
@@ -254,9 +252,9 @@ If your code is just a utility one it's less important.
 If there is a project with complex domain logic, this logic must be very clear for everyone, 
 so then tests describe domain details without technical keywords, and you can talk with a business in a language like in these tests.
 
-All code that is related to the domain should be free from technical details. A non-programmer won't be read these tests, 
-but if you want to talk about the domain these tests will be useful to know what this domain does. 
-There will be a description without technical details e.g. returns null, throws an exception, etc. 
+All code that is related to the domain should be free from technical details. A non-programmer won't be read these tests. 
+If you want to talk about the domain these tests will be useful to know what this domain does. 
+There will be a description without technical details e.g., returns null, throws an exception, etc. 
 This kind of information has nothing to do with the domain, so we shouldn't use these keywords.
 
 
@@ -281,7 +279,7 @@ public function aaa_pattern_example_test(): void
     $sut->activate();
 
     //Assert|Then
-    self::assertEquals(Status::activated(), $sut->status());
+    self::assertSame(Status::activated(), $sut->status());
 }
 ```
 
@@ -339,10 +337,9 @@ final class ExampleTest
 
 ## Parameterized test
 
-The parameterized test is a good option to test the SUT with a lot of parameters without repeating the code.  
+The parameterized test is a good option to test the SUT with many parameters without repeating the code.  
 
-:thumbsdown: This kind of test is less readable. To increase the readability a little, negative and positive examples should be
-split up to different tests.
+:thumbsdown: This kind of test is less readable. To increase the readability a little, negative and positive examples should be split up to different tests.
 
 ```php
 final class ExampleTest extends TestCase
@@ -357,7 +354,7 @@ final class ExampleTest extends TestCase
 
         $result = $sut->isValid($email);
 
-        self::assertEquals(false, $result);
+        self::assertFalse($result);
     }
 
     /**
@@ -370,7 +367,7 @@ final class ExampleTest extends TestCase
 
         $result = $sut->isValid($email);
 
-        self::assertEquals(true, $result);
+        self::assertTrue($result);
     }
 
     public function getInvalidEmails(): array
@@ -416,7 +413,7 @@ final class TestExample extends TestCase
         $result = $sut->suspend($canAlwaysSuspendPolicy);
 
         self::assertTrue($result);
-        self::assertEquals(Status::suspend(), $sut->status());
+        self::assertSame(Status::suspend(), $sut->status());
     }
 }
 ```
@@ -441,7 +438,7 @@ final class TestExample extends TestCase
         $result = $sut->suspend($canAlwaysSuspendPolicy);
 
         self::assertTrue($result);
-        self::assertEquals(Status::suspend(), $sut->status());
+        self::assertSame(Status::suspend(), $sut->status());
     }
 }
 ```
@@ -453,7 +450,7 @@ final class TestExample extends TestCase
 
 [TODO]
 
-## Mock vs Stub
+## Mock vs. Stub
 
 Example: 
 ```php
@@ -550,7 +547,7 @@ final class ExampleTest extends TestCase
 
         $result = $sut->isValid($email);
 
-        self::assertEquals(false, $result);
+        self::assertFalse($result);
     }
 
     /**
@@ -563,7 +560,7 @@ final class ExampleTest extends TestCase
 
         $result = $sut->isValid($email);
 
-        self::assertEquals(true, $result);
+        self::assertTrue($result);
     }
 
     public function getInvalidEmails(): array
@@ -608,8 +605,8 @@ final class ExampleTest extends TestCase
 
         $sut->addItem($item);
 
-        self::assertEquals(1, $sut->getCount());
-        self::assertEquals($item, $sut->getItems()[0]);
+        self::assertSame(1, $sut->getCount());
+        self::assertSame($item, $sut->getItems()[0]);
     }
 }
 ```
@@ -675,7 +672,7 @@ an infrastructure code related to a file system.**
 
 :heavy_check_mark: Good:
 
-Like in the functional architecture we need to separate a code that has side effects and code which contains only logic.
+Like in functional architecture, we need to separate a code with side effects and code that contains only logic.
 
 ```php
 final class NameParser
@@ -746,7 +743,7 @@ final class ValidUnitExampleTest extends TestCase
 
         $result = $sut->parse($namesData);
         
-        self::assertEquals(
+        self::assertSame(
             [
                 new Name('John', new Gender('M')),
                 new Name('Lennon', new Gender('U')),
@@ -758,7 +755,7 @@ final class ValidUnitExampleTest extends TestCase
 }
 ```
 
-## Observable behavior vs implementation details
+## Observable behavior vs. implementation details
 
 :x: Bad:
 
@@ -833,7 +830,7 @@ final class InvalidTestExample extends TestCase
 
         $result = $sut->renewSubscription(1);
 
-        self::assertEquals(Status::active(), $expiredSubscription->getStatus());
+        self::assertSame(Status::active(), $expiredSubscription->getStatus());
         self::assertGreaterThan($modifiedAt, $expiredSubscription->getModifiedAt());
         self::assertTrue($result);
     }
@@ -851,7 +848,7 @@ final class InvalidTestExample extends TestCase
 
         $result = $sut->renewSubscription(1);
 
-        self::assertEquals($modifiedAt, $activeSubscription->getModifiedAt());
+        self::assertSame($modifiedAt, $activeSubscription->getModifiedAt());
         self::assertFalse($result);
     }
 }
@@ -957,8 +954,8 @@ final class ValidTestExample extends TestCase
 ```
 
 :information_source: The first subscription model has a bad design. To invoke one business operation you need to call three methods. Also using getters to verify operation is not a good practice.
-In this case, it's skipped checking a change of modifiedAt, probably setting specific modifiedAt during a renew operation can be tested with an expiration business operation. The getter for modifiedAt is not required.
-Of course, there are cases where finding the possibility to avoid getters provided only for tests will be very hard, but always we should try to not introduce them.
+In this case, it's skipped checking a change of `modifiedAt`, probably setting specific `modifiedAt` during a renew operation can be tested with an expiration business operation. The getter for `modifiedAt` is not required.
+Of course, there are cases where finding the possibility to avoid getters provided only for tests will be very hard, but always we should try not to introduce them.
 
 ## Unit of behavior
 
@@ -984,7 +981,7 @@ class CannotSuspendExpiredSubscriptionPolicyTest extends TestCase
     /**
      * @test
      */
-    public function it_returns_true_when_a_subscription_is_expired(): void
+    public function it_returns_false_when_a_subscription_is_expired(): void
     {
         $policy = new CannotSuspendExpiredSubscriptionPolicy();
         $subscription = $this->createStub(Subscription::class);
@@ -996,7 +993,7 @@ class CannotSuspendExpiredSubscriptionPolicyTest extends TestCase
     /**
      * @test
      */
-    public function it_returns_false_when_a_subscription_is_not_expired(): void
+    public function it_returns_true_when_a_subscription_is_not_expired(): void
     {
         $policy = new CannotSuspendExpiredSubscriptionPolicy();
         $subscription = $this->createStub(Subscription::class);
@@ -1213,7 +1210,7 @@ class SubscriptionTest extends TestCase
 }
 ```
 
-:exclamation: **Do not write code 1:1, 1 class : 1 test. It leads to fragile tests which make that refactoring is very hard.**
+:exclamation: **Do not write code 1:1, 1 class : 1 test. It leads to fragile tests which make that refactoring is tough.**
 
 :heavy_check_mark: Good:
 
@@ -1585,7 +1582,7 @@ final class CustomerTest extends TestCase
 
         $customer->setName('John');
 
-        self::assertEquals('John', $customer->getName());
+        self::assertSame('John', $customer->getName());
     }
 }
 ```
@@ -1612,7 +1609,7 @@ final class EventSubscriberTest extends TestCase
     {
         $result = EventSubscriber::getSubscribedEvents();
 
-        self::assertEquals(['event' => 'onEvent'], $result);
+        self::assertSame(['event' => 'onEvent'], $result);
     }
 }
 ```
@@ -1684,12 +1681,12 @@ final class TestUserRepository extends TestCase
 
         $result = $userRepository->getUserNameByEmail($email);
 
-        self::assertEquals(['email' => $email], $result);
+        self::assertSame(['email' => $email], $result);
     }
 }
 ```
 
-:exclamation: Testing repositories in that way leads to fragile tests and then refactoring is very hard. To test repositories write integration tests.
+:exclamation: Testing repositories in that way leads to fragile tests and then refactoring is tough. To test repositories write integration tests.
 
 ## Test fixtures
 
@@ -1841,7 +1838,7 @@ final class InvalidTest extends TestCase
         $sut = new Customer();
         $sut->makeVip();
 
-        self::assertEquals(CustomerType::VIP(), $sut->getCustomerType());
+        self::assertSame(CustomerType::VIP(), $sut->getCustomerType());
     }
 }
 ```
@@ -1885,14 +1882,13 @@ final class ValidTest extends TestCase
         $sut = new Customer();
         $sut->makeVip();
 
-        self::assertEquals(25, $sut->getPercentageDiscount());
+        self::assertSame(25, $sut->getPercentageDiscount());
     }
 }
 ```
 
 :exclamation: Adding additional production code (e.g. getter getCustomerType()) only to verify the state in tests is a bad practice.
-It should be verified by another domain significant value (in this case getPercentageDiscount()). Of course, sometimes it can be very hard
-to find another way to verify the operation, and we can be forced to add additional production code to verify correctness in tests, but we should try to avoid that.
+It should be verified by another domain significant value (in this case getPercentageDiscount()). Of course, sometimes it can be tough to find another way to verify the operation, and we can be forced to add additional production code to verify correctness in tests, but we should try to avoid that.
 
 ### Leaking domain details
 
@@ -1919,7 +1915,7 @@ final class InvalidTest extends TestCase
     {
         $sut = new DiscountCalculator();
 
-        self::assertEquals($expected, $sut->calculate($vipDaysFrom));
+        self::assertSame($expected, $sut->calculate($vipDaysFrom));
     }
 
     public function discountDataProvider(): array
@@ -1946,7 +1942,7 @@ final class ValidTest extends TestCase
     {
         $sut = new DiscountCalculator();
 
-        self::assertEquals($expected, $sut->calculate($vipDaysFrom));
+        self::assertSame($expected, $sut->calculate($vipDaysFrom));
     }
 
     public function discountDataProvider(): array
@@ -2011,7 +2007,7 @@ final class InvalidTest extends TestCase
         $discountCalculator->method('calculateAdditionalDiscountFromExternalSystem')->willReturn(5);
         $sut = new OrderService($discountCalculator);
 
-        self::assertEquals($expected, $sut->getTotalPriceWithDiscount($totalPrice, $vipDaysFrom));
+        self::assertSame($expected, $sut->getTotalPriceWithDiscount($totalPrice, $vipDaysFrom));
     }
 
     public function orderDataProvider(): array
@@ -2075,7 +2071,7 @@ final class ValidTest extends TestCase
         $externalDiscountCalculator->method('calculate')->willReturn(5);
         $sut = new OrderService(new InternalDiscountCalculator(), $externalDiscountCalculator);
 
-        self::assertEquals($expected, $sut->getTotalPriceWithDiscount($totalPrice, $vipDaysFrom));
+        self::assertSame($expected, $sut->getTotalPriceWithDiscount($totalPrice, $vipDaysFrom));
     }
 
     public function orderDataProvider(): array
@@ -2141,7 +2137,7 @@ final class InvalidTest extends TestCase
      */
     public function get_total_returns_a_total_cost_of_a_whole_order(Order $order, int $expectedTotal): void
     {
-        self::assertEquals($expectedTotal, $order->getTotal());
+        self::assertSame($expectedTotal, $order->getTotal());
     }
 
     /**
@@ -2150,7 +2146,7 @@ final class InvalidTest extends TestCase
      */
     public function get_items_total_returns_a_total_cost_of_all_items(Order $order, int $expectedTotal): void
     {
-        self::assertEquals($expectedTotal, $this->invokePrivateMethodGetItemsTotal($order));
+        self::assertSame($expectedTotal, $this->invokePrivateMethodGetItemsTotal($order));
     }
 
     public function ordersDataProvider(): array
@@ -2192,7 +2188,7 @@ final class ValidTest extends TestCase
      */
     public function get_total_returns_a_total_cost_of_a_whole_order(Order $order, int $expectedTotal): void
     {
-        self::assertEquals($expectedTotal, $order->getTotal());
+        self::assertSame($expectedTotal, $order->getTotal());
     }
 
     public function ordersDataProvider(): array
@@ -2210,7 +2206,7 @@ final class ValidTest extends TestCase
 
 ### Time as a volatile dependency
 
-:information_source: The time is a volatile dependency because is non-deterministic, each invocation returns a different result.
+:information_source: The time is a volatile dependency because it is non-deterministic. Each invocation returns a different result.
 
 :x: Bad:
 
