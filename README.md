@@ -2389,5 +2389,5 @@ Mutation testing gives better feedback about the quality of tests.
 
 ## Author
 **Twitter:** [Kamil "sarven" Ruczyński](https://twitter.com/Sarvendev)  
-**Blog EN:** [https://sarvendev.com/en/](https://sarvendev.com/en/)
-**Blog PL:** [https://sarvendev.com/en/](https://sarvendev.com/)
+**Blog EN:** [https://sarvendev.com/en/](https://sarvendev.com/en/)  
+**Blog PL:** [https://sarvendev.com/](https://sarvendev.com/)
