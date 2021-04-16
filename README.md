@@ -2386,3 +2386,8 @@ Mutation testing gives better feedback about the quality of tests.
 
 - [Test Driven Development: By Example / Kent Beck](https://www.amazon.com/gp/product/0321146530/)  - the classic
 - [Unit Testing Principles, Practices, and Patterns / Vladimir Khorikov](https://www.amazon.com/Unit-Testing-Principles-Practices-Patterns/dp/1617296279) - the best book about tests I've ever read
+
+## Author
+**Twitter:** [Kamil "sarven" Ruczyński](https://twitter.com/Sarvendev)  
+**Blog EN:** [https://sarvendev.com/en/](https://sarvendev.com/en/)
+**Blog PL:** [https://sarvendev.com/en/](https://sarvendev.com/)
