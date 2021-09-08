@@ -32,25 +32,25 @@ Donc, dans ces exemples, je vais essayer de partager quelques conseils sur ce qu
 13. [Humble pattern](#humble-pattern)
 14. [Test trivial](#trivial-test)
 15. [Fragile test](#fragile-test)
-16. [Test fixtures](#test-fixtures)
-17. [General testing anti-patterns](#general-testing-anti-patterns)
-    * [Exposing private state](#exposing-private-state)
-    * [Leaking domain details](#leaking-domain-details)
-    * [Mocking concrete classes](#mocking-concrete-classes)
-    * [Testing private methods](#testing-private-methods)
-    * [Time as a volatile dependency](#time-as-a-volatile-dependency)
-18. [100% Test Coverage shouldn't be the goal](#100-test-coverage-shouldnt-be-the-goal)
-19. [Recommended books](#recommended-books)
+16. [Agencement d'essai](#test-fixtures)
+17. [Anti-modèles de test généraux](#general-testing-anti-patterns)
+    * [Exposer l'état privé](#exposing-private-state)
+    * [Fuite des détails du domaine](#leaking-domain-details)
+    * [Cours de béton moqueur](#mocking-concrete-classes)
+    * [Tester les méthodes privées](#testing-private-methods)
+    * [Le temps comme dépendance volatile](#time-as-a-volatile-dependency)
+18. [Une couverture de test à 100 % ne devrait pas être l'objectif](#100-test-coverage-shouldnt-be-the-goal)
+19. [Livres recommandés](#recommended-books)
 
 ## Test doubles
 
-Test doubles are fake dependencies used in tests.
+Les doubles de test sont de fausses dépendances utilisées dans les tests..
 
 ### Stubs
 
 #### Dummy
 
-A dummy is a just simple implementation that does nothing.
+Un mannequin est une implémentation simple qui ne fait rien.
 
 ```php
 final class Mailer implements MailerInterface
@@ -61,9 +61,9 @@ final class Mailer implements MailerInterface
 }
 ```
 
-#### Fake
+#### Faux
 
-A fake is a simplified implementation to simulate the original behavior.
+Un faux est une implémentation simplifiée pour simuler le comportement d'origine.
 
 ```php
 final class InMemoryCustomerRepository implements CustomerRepositoryInterface
@@ -107,7 +107,7 @@ final class InMemoryCustomerRepository implements CustomerRepositoryInterface
 
 #### Stub
 
-A stub is the simplest implementation with a hardcoded behavior.
+Un stub est l'implémentation la plus simple avec un comportement codé en dur.
 
 ```php
 final class UniqueEmailSpecificationStub implements UniqueEmailSpecificationInterface
