@@ -1,22 +1,22 @@
-# Unit testing tips by examples in PHP
+# Conseils sur les tests unitaires par des exemples en PHP
 
 ## Introduction
 
-In these times, the benefits of writing unit tests are huge.
-I think that most of the recently started projects contain any unit tests.
-In enterprise applications with a lot of business logic, unit tests are the most important tests,
-because they are fast and can us instantly assure that our implementation is correct.
-However, I often see a problem with good tests in projects, though these tests' benefits are only huge when you have good unit tests.
-So in these examples, I will try to share some tips on what to do to write good unit tests.
+En ces temps, les avantages d'écrire des tests unitaires sont énormes.
+Je pense que la plupart des projets récemment lancés contiennent des tests unitaires.
+Dans les applications d'entreprise avec beaucoup de logique métier, les tests unitaires sont les tests les plus importants,
+car ils sont rapides et peuvent nous assurer instantanément que notre implémentation est correcte.
+Cependant, je vois souvent un problème avec de bons tests dans les projets, bien que les avantages de ces tests ne soient énormes que lorsque vous avez de bons tests unitaires.
+Donc, dans ces exemples, je vais essayer de partager quelques conseils sur ce qu'il faut faire pour écrire de bons tests unitaires..
 
 ## Table of Contents
 
 1. [Introduction](#introduction)
 2. [Test doubles](#test-doubles)
 3. [Naming](#naming)
-4. [AAA pattern](#aaa-pattern)
-5. [Object mother](#object-mother)
-6. [Parameterized test](#parameterized-test)
+4. [Modèle AAA](#aaa-pattern)
+5. [Objet mère](#object-mother)
+6. [Test paramétré](#parameterized-test)
 7. [Two schools of unit testing](#two-schools-of-unit-testing)
    * [Classical](#classical)
    * [Mockist](#mockist)
