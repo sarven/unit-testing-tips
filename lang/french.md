@@ -9,7 +9,12 @@ car ils sont rapides et peuvent nous assurer instantanément que notre implémen
 Cependant, je vois souvent un problème avec de bons tests dans les projets, bien que les avantages de ces tests ne soient énormes que lorsque vous avez de bons tests unitaires.
 Donc, dans ces exemples, je vais essayer de partager quelques conseils sur ce qu'il faut faire pour écrire de bons tests unitaires..
 
-## Table of Contents
+### Traductions
+Ceci est également disponible dans d'autres langues:
+- [Anglais](../README.md)
+
+
+## Table des matières
 
 1. [Introduction](#introduction)
 2. [Test doubles](#test-doubles)

@@ -9,7 +9,10 @@ because they are fast and can us instantly assure that our implementation is cor
 However, I often see a problem with good tests in projects, though these tests' benefits are only huge when you have good unit tests.
 So in these examples, I will try to share some tips on what to do to write good unit tests.
 
-Ps: for french developers, it [here](./lang/french.md) 
+### Translations
+This is also available in other languages:
+- [French](./lang/french.md)
+
 
 ## Table of Contents
 
