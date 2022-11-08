@@ -246,10 +246,17 @@ public function deactivating_an_inactive_subscription_is_invalid(): void
 }
 ```
 
-:information_source: Describing the behavior is important in testing the domain scenarios. 
+| :information_source: **INFORMATION:** |
+|:--------------------------------------|
+
+Describing the behavior is important in testing the domain scenarios. 
 If your code is just a utility one it's less important.
 
-:question: Why would it be useful for a non-programmer to read unit tests?  
+
+| :question: **QUESTION:** |
+|:-------------------------|
+
+Why would it be useful for a non-programmer to read unit tests?  
 
 If there is a project with complex domain logic, this logic must be very clear for everyone, 
 so then tests describe domain details without technical keywords, and you can talk with a business in a language like in these tests.
@@ -445,7 +452,9 @@ final class TestExample extends TestCase
 }
 ```
 
-:information_source:
+| :information_source: **INFORMATION:** |
+|:--------------------------------------|
+
 **The classical approach is better to avoid fragile tests.**
 
 ### Dependencies
@@ -473,7 +482,8 @@ final class NotificationService
 }
 ```
 
-:x: Bad:
+| :x: **BAD:** |
+|:-------------|
 
 - **Asserting interactions with stubs leads to fragile tests**
 
@@ -501,7 +511,9 @@ final class TestExample extends TestCase
 }
 ```
 
-:heavy_check_mark: Good:
+| :white_check_mark: **GOOD:** |
+|:-----------------------------|
+
 ```php
 final class TestExample extends TestCase
 {
@@ -645,7 +657,9 @@ final class ExampleTest extends TestCase
 
 ## Functional architecture and tests
 
-:x: Bad:
+| :x: **BAD:** |
+|:-------------|
+
 ```php
 final class NameService
 {
@@ -672,7 +686,8 @@ final class NameService
 **How to test a code like this? It is possible only with an integration test because it directly uses
 an infrastructure code related to a file system.**
 
-:heavy_check_mark: Good:
+| :white_check_mark: **GOOD:** |
+|:-----------------------------|
 
 Like in functional architecture, we need to separate a code with side effects and code that contains only logic.
 
@@ -759,7 +774,8 @@ final class ValidUnitExampleTest extends TestCase
 
 ## Observable behavior vs. implementation details
 
-:x: Bad:
+| :x: **BAD:** |
+|:-------------|
 
 ```php
 final class ApplicationService
@@ -856,7 +872,8 @@ final class InvalidTestExample extends TestCase
 }
 ```
 
-:heavy_check_mark: Good:
+| :white_check_mark: **GOOD:** |
+|:-----------------------------|
 
 ```php
 final class ApplicationService
@@ -955,13 +972,17 @@ final class ValidTestExample extends TestCase
 }
 ```
 
-:information_source: The first subscription model has a bad design. To invoke one business operation you need to call three methods. Also using getters to verify operation is not a good practice.
+| :information_source: **INFORMATION:** |
+|:--------------------------------------|
+
+The first subscription model has a bad design. To invoke one business operation you need to call three methods. Also using getters to verify operation is not a good practice.
 In this case, it's skipped checking a change of `modifiedAt`, probably setting specific `modifiedAt` during a renew operation can be tested with an expiration business operation. The getter for `modifiedAt` is not required.
 Of course, there are cases where finding the possibility to avoid getters provided only for tests will be very hard, but always we should try not to introduce them.
 
 ## Unit of behavior
 
-:x: Bad:
+| :x: **BAD:** |
+|:-------------|
 
 ```php
 class CannotSuspendExpiredSubscriptionPolicy implements SuspendingPolicyInterface
@@ -1214,7 +1235,8 @@ class SubscriptionTest extends TestCase
 
 :exclamation: **Do not write code 1:1, 1 class : 1 test. It leads to fragile tests which make that refactoring is tough.**
 
-:heavy_check_mark: Good:
+| :white_check_mark: **GOOD:** |
+|:-----------------------------|
 
 ```php
 final class CannotSuspendExpiredSubscriptionPolicy implements SuspendingPolicyInterface
@@ -1556,7 +1578,8 @@ However, ApplicationService probably should be tested by an integration test wit
 
 ## Trivial test
 
-:x: Bad:
+| :x: **BAD:** |
+|:-------------|
 
 ```php
 final class Customer
@@ -1620,7 +1643,8 @@ final class EventSubscriberTest extends TestCase
 
 ## Fragile test
 
-:x: Bad:
+| :x: **BAD:** |
+|:-------------|
 
 ```php
 final class UserRepository
@@ -1692,7 +1716,8 @@ final class TestUserRepository extends TestCase
 
 ## Test fixtures
 
-:x: Bad:
+| :x: **BAD:** |
+|:-------------|
 
 ```php
 final class InvalidTest extends TestCase
@@ -1735,7 +1760,8 @@ final class InvalidTest extends TestCase
 }
 ```
 
-:heavy_check_mark: Good:
+| :white_check_mark: **GOOD:** |
+|:-----------------------------|
 
 ```php
 final class ValidTest extends TestCase
@@ -1790,6 +1816,9 @@ final class ValidTest extends TestCase
 }
 ```
 
+| :information_source: **INFORMATION:** |
+|:--------------------------------------|
+
 - It's better to avoid a shared state between tests.
 - To reuse elements between a few tests:
     * private factory methods - reusing in one class (like above)
@@ -1799,7 +1828,8 @@ final class ValidTest extends TestCase
 
 ### Exposing private state
 
-:x: Bad:
+| :x: **BAD:** |
+|:-------------|
 
 ```php
 final class Customer
@@ -1845,7 +1875,7 @@ final class InvalidTest extends TestCase
 }
 ```
 
-| :heavy_check_mark: **GOOD:** |
+| :white_check_mark: **GOOD:** |
 |:-----------------------------|
 
 ```php
@@ -1936,7 +1966,7 @@ final class InvalidTest extends TestCase
     }
 }
 ```
-| :heavy_check_mark: **GOOD:** |
+| :white_check_mark: **GOOD:** |
 |:-----------------------------|
 
 ```php
@@ -1971,7 +2001,8 @@ Don't duplicate the production logic in tests. Just verify results by hardcoded 
 
 ### Mocking concrete classes
 
-:x: Bad:
+| :x: **BAD:** |
+|:-------------|
 
 ```php
 class DiscountCalculator
@@ -2031,7 +2062,7 @@ final class InvalidTest extends TestCase
 }
 ```
 
-| :heavy_check_mark: **GOOD:** |
+| :white_check_mark: **GOOD:** |
 |:-----------------------------|
 
 
@@ -2194,7 +2225,7 @@ final class InvalidTest extends TestCase
 }
 ```
 
-| :heavy_check_mark: **GOOD:** |
+| :white_check_mark: **GOOD:** |
 |:-----------------------------|
 
 ```php
@@ -2304,7 +2335,7 @@ final class InvalidTest extends TestCase
 }
 ```
 
-| :heavy_check_mark: **GOOD:** |
+| :white_check_mark: **GOOD:** |
 |:-----------------------------|
 
 
