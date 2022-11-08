@@ -2208,9 +2208,13 @@ final class ValidTest extends TestCase
 
 ### Time as a volatile dependency
 
-:information_source: The time is a volatile dependency because it is non-deterministic. Each invocation returns a different result.
+| :information_source: **INFORMATION** |
+|:-------------------------------------|
+The time is a volatile dependency because it is non-deterministic. Each invocation returns a different result.
 
-:x: Bad:
+| :x: **Bad:** |
+|:-------------|
+
 
 ```php
 final class Clock
@@ -2284,7 +2288,9 @@ final class InvalidTest extends TestCase
 }
 ```
 
-:heavy_check_mark: Good:
+| :heavy_check_mark: **Good:** |
+|:-----------------------------|
+
 
 ```php
 interface ClockInterface
@@ -2371,8 +2377,12 @@ final class ValidTest extends TestCase
 }
 ```
 
-> **Note** 
-> The time and random numbers should not be generated directly in the domain code. To test behavior we must have
+
+
+| :information_source: **INFORMATION** |
+|:-------------------------------------|
+
+The time and random numbers should not be generated directly in the domain code. To test behavior we must have
 deterministic results, so we need to inject these values into a domain object like in the example above.
 
 ## 100% Test Coverage shouldn't be the goal  
