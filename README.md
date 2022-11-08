@@ -170,13 +170,16 @@ $mailer
     ->with($this->equalTo($message));
 ```
 
-:exclamation: 
+| :exclamation: **WARNING:** |
+|:---------------------------|
 To verify incoming interactions, use a stub, but to verify outcoming interactions, use a mock. 
 More: [Mock vs Stub](#mock-vs-stub)
 
 ## Naming
 
-:heavy_minus_sign: Not good:
+| :x: **NOT GOOD:** |
+|:------------------|
+
 ```php
 public function test(): void
 {
@@ -188,7 +191,9 @@ public function test(): void
 }
 ```
 
-:heavy_check_mark: **Specify explicitly what you are testing**
+| :white_check_mark: **Specify explicitly what you are testing** |
+|:---------------------------------------------------------------|
+
 ```php
 public function sut(): void
 {
@@ -201,7 +206,8 @@ public function sut(): void
 }
 ``` 
 
-:heavy_minus_sign: Not good:
+| :x: **NOT GOOD:** |
+|:------------------|
 ```php
 public function it_throws_invalid_credentials_exception_when_sign_in_with_invalid_credentials(): void
 {
@@ -219,7 +225,9 @@ public function testDeactivateASubscription(): void
 }
 ```
 
-:heavy_check_mark: Better:  
+| :white_check_mark: **Better** |
+|:------------------------------|
+
 - **Using underscore improves readability**
 - **The name should describe the behavior, not the implementation**
 - **Use names without technical keywords. It should be readable for a non-programmer person.**
@@ -246,10 +254,17 @@ public function deactivating_an_inactive_subscription_is_invalid(): void
 }
 ```
 
-:information_source: Describing the behavior is important in testing the domain scenarios. 
+| :information_source: **INFORMATION:** |
+|:--------------------------------------|
+
+Describing the behavior is important in testing the domain scenarios. 
 If your code is just a utility one it's less important.
 
-:question: Why would it be useful for a non-programmer to read unit tests?  
+
+| :question: **QUESTION:** |
+|:-------------------------|
+
+Why would it be useful for a non-programmer to read unit tests?  
 
 If there is a project with complex domain logic, this logic must be very clear for everyone, 
 so then tests describe domain details without technical keywords, and you can talk with a business in a language like in these tests.
@@ -264,12 +279,15 @@ This kind of information has nothing to do with the domain, so we shouldn't use 
 
 It's also common Given, When, Then.
 
-:heavy_check_mark: Separate three sections of the test:  
+Separate three sections of the test:  
 
 - **Arrange**: Bring the system under test in the desired state. Prepare dependencies, arguments and finally construct
 the SUT.
 - **Act**: Invoke a tested element.
 - **Assert**: Verify the result, the final state, or the communication with collaborators.
+
+| :white_check_mark: **GOOD** |
+|:----------------------------|
 
 ```php
 public function aaa_pattern_example_test(): void
@@ -445,7 +463,9 @@ final class TestExample extends TestCase
 }
 ```
 
-:information_source:
+| :information_source: **INFORMATION:** |
+|:--------------------------------------|
+
 **The classical approach is better to avoid fragile tests.**
 
 ### Dependencies
@@ -473,7 +493,8 @@ final class NotificationService
 }
 ```
 
-:x: Bad:
+| :x: **BAD:** |
+|:-------------|
 
 - **Asserting interactions with stubs leads to fragile tests**
 
@@ -501,7 +522,9 @@ final class TestExample extends TestCase
 }
 ```
 
-:heavy_check_mark: Good:
+| :white_check_mark: **GOOD:** |
+|:-----------------------------|
+
 ```php
 final class TestExample extends TestCase
 {
@@ -530,7 +553,9 @@ final class TestExample extends TestCase
 
 ### Output
 
-:heavy_check_mark:  The best option:  
+| :white_check_mark: **The best option:** |
+|:----------------------------------------|
+
 - **The best resistance to refactoring**
 - **The best accuracy**
 - **The lowest cost of maintainability**  
@@ -589,7 +614,9 @@ final class ExampleTest extends TestCase
 
 ### State
 
-:white_check_mark: Worse option:  
+| :heavy_minus_sign: **Worse option:** |
+|:-------------------------------------|
+
 - **Worse resistance to refactoring**
 - **Worse accuracy**
 - **Higher cost of maintainability**
@@ -615,7 +642,9 @@ final class ExampleTest extends TestCase
 
 ### Communication
 
-:white_check_mark: The worst option: 
+| :x: **The worst option:** |
+|:--------------------------|
+
 - **The worst resistance to refactoring**
 - **The worst accuracy**
 - **The highest cost of maintainability**
@@ -645,7 +674,9 @@ final class ExampleTest extends TestCase
 
 ## Functional architecture and tests
 
-:x: Bad:
+| :x: **BAD:** |
+|:-------------|
+
 ```php
 final class NameService
 {
@@ -672,7 +703,8 @@ final class NameService
 **How to test a code like this? It is possible only with an integration test because it directly uses
 an infrastructure code related to a file system.**
 
-:heavy_check_mark: Good:
+| :white_check_mark: **GOOD:** |
+|:-----------------------------|
 
 Like in functional architecture, we need to separate a code with side effects and code that contains only logic.
 
@@ -759,7 +791,8 @@ final class ValidUnitExampleTest extends TestCase
 
 ## Observable behavior vs. implementation details
 
-:x: Bad:
+| :x: **BAD:** |
+|:-------------|
 
 ```php
 final class ApplicationService
@@ -851,7 +884,8 @@ final class InvalidTestExample extends TestCase
 }
 ```
 
-:heavy_check_mark: Good:
+| :white_check_mark: **GOOD:** |
+|:-----------------------------|
 
 ```php
 final class ApplicationService
@@ -951,13 +985,17 @@ final class ValidTestExample extends TestCase
 }
 ```
 
-:information_source: The first subscription model has a bad design. To invoke one business operation you need to call three methods. Also using getters to verify operation is not a good practice.
+| :information_source: **INFORMATION:** |
+|:--------------------------------------|
+
+The first subscription model has a bad design. To invoke one business operation you need to call three methods. Also using getters to verify operation is not a good practice.
 In this case, it's skipped checking a change of `modifiedAt`, probably setting specific `modifiedAt` during a renew operation can be tested with an expiration business operation. The getter for `modifiedAt` is not required.
 Of course, there are cases where finding the possibility to avoid getters provided only for tests will be very hard, but always we should try not to introduce them.
 
 ## Unit of behavior
 
-:x: Bad:
+| :x: **BAD:** |
+|:-------------|
 
 ```php
 class CannotSuspendExpiredSubscriptionPolicy implements SuspendingPolicyInterface
@@ -1206,9 +1244,13 @@ class SubscriptionTest extends TestCase
 }
 ```
 
-:exclamation: **Do not write code 1:1, 1 class : 1 test. It leads to fragile tests which make that refactoring is tough.**
+| :exclamation: **WARNING:** |
+|:---------------------------|
 
-:heavy_check_mark: Good:
+**Do not write code 1:1, 1 class : 1 test. It leads to fragile tests which make that refactoring is tough.**
+
+| :white_check_mark: **GOOD:** |
+|:-----------------------------|
 
 ```php
 final class CannotSuspendExpiredSubscriptionPolicy implements SuspendingPolicyInterface
@@ -1466,7 +1508,10 @@ class ApplicationService
 }
 ```
 
-:heavy_check_mark: It's required to split up an overcomplicated code to separate classes.
+| :white_check_mark: **GOOD:** |
+|:-----------------------------|
+
+It's required to split up an overcomplicated code to separate classes.
 
 ```php
 final class ApplicationService
@@ -1548,7 +1593,8 @@ However, ApplicationService probably should be tested by an integration test wit
 
 ## Trivial test
 
-:x: Bad:
+| :x: **BAD:** |
+|:-------------|
 
 ```php
 final class Customer
@@ -1608,11 +1654,14 @@ final class EventSubscriberTest extends TestCase
 }
 ```
 
-:exclamation: Testing the code without any complicated logic is senseless, but also leads to fragile tests.
+| :exclamation: **WARNING:** |
+|:---------------------------|
+Testing the code without any complicated logic is senseless, but also leads to fragile tests.
 
 ## Fragile test
 
-:x: Bad:
+| :x: **BAD:** |
+|:-------------|
 
 ```php
 final class UserRepository
@@ -1680,11 +1729,14 @@ final class TestUserRepository extends TestCase
 }
 ```
 
-:exclamation: Testing repositories in that way leads to fragile tests and then refactoring is tough. To test repositories write integration tests.
+| :exclamation: **WARNING:** |
+|:---------------------------|
+Testing repositories in that way leads to fragile tests and then refactoring is tough. To test repositories write integration tests.
 
 ## Test fixtures
 
-:x: Bad:
+| :x: **BAD:** |
+|:-------------|
 
 ```php
 final class InvalidTest extends TestCase
@@ -1727,7 +1779,8 @@ final class InvalidTest extends TestCase
 }
 ```
 
-:heavy_check_mark: Good:
+| :white_check_mark: **GOOD:** |
+|:-----------------------------|
 
 ```php
 final class ValidTest extends TestCase
@@ -1782,6 +1835,9 @@ final class ValidTest extends TestCase
 }
 ```
 
+| :information_source: **INFORMATION:** |
+|:--------------------------------------|
+
 - It's better to avoid a shared state between tests.
 - To reuse elements between a few tests:
     * private factory methods - reusing in one class (like above)
@@ -1791,7 +1847,8 @@ final class ValidTest extends TestCase
 
 ### Exposing private state
 
-:x: Bad:
+| :x: **BAD:** |
+|:-------------|
 
 ```php
 final class Customer
@@ -1837,7 +1894,8 @@ final class InvalidTest extends TestCase
 }
 ```
 
-:heavy_check_mark: Good:
+| :white_check_mark: **GOOD:** |
+|:-----------------------------|
 
 ```php
 final class Customer
@@ -1881,7 +1939,10 @@ final class ValidTest extends TestCase
 }
 ```
 
-:exclamation: Adding additional production code (e.g. getter getCustomerType()) only to verify the state in tests is a bad practice.
+| :exclamation: **WARNING:** |
+|:---------------------------|
+
+Adding additional production code (e.g. getter getCustomerType()) only to verify the state in tests is a bad practice.
 It should be verified by another domain significant value (in this case getPercentageDiscount()). Of course, sometimes it can be tough to find another way to verify the operation, and we can be forced to add additional production code to verify correctness in tests, but we should try to avoid that.
 
 ### Leaking domain details
@@ -1897,7 +1958,8 @@ final class DiscountCalculator
 }
 ```
 
-:x: Bad:
+| :x: **BAD:** |
+|:-------------|
 
 ```php
 final class InvalidTest extends TestCase
@@ -1923,8 +1985,8 @@ final class InvalidTest extends TestCase
     }
 }
 ```
-
-:heavy_check_mark: Good:
+| :white_check_mark: **GOOD:** |
+|:-----------------------------|
 
 ```php
 final class ValidTest extends TestCase
@@ -1951,11 +2013,15 @@ final class ValidTest extends TestCase
 }
 ```
 
-:information_source: Don't duplicate the production logic in tests. Just verify results by hardcoded values.
+| :information_source: **INFORMATION:** |
+|:--------------------------------------|
+
+Don't duplicate the production logic in tests. Just verify results by hardcoded values.
 
 ### Mocking concrete classes
 
-:x: Bad:
+| :x: **BAD:** |
+|:-------------|
 
 ```php
 class DiscountCalculator
@@ -2015,7 +2081,9 @@ final class InvalidTest extends TestCase
 }
 ```
 
-:heavy_check_mark: Good:
+| :white_check_mark: **GOOD:** |
+|:-----------------------------|
+
 
 ```php
 interface ExternalDiscountCalculatorInterface
@@ -2079,7 +2147,10 @@ final class ValidTest extends TestCase
 }
 ```
 
-:information_source: The necessity to mock a concrete class to replace a part of its behavior means that this class is probably too complicated and violates the Single Responsibility Principle.
+| :information_source: **INFORMATION:** |
+|:--------------------------------------|
+
+The necessity to mock a concrete class to replace a part of its behavior means that this class is probably too complicated and violates the Single Responsibility Principle.
 
 ### Testing private methods
 
@@ -2115,7 +2186,9 @@ final class Order
 }
 ```
 
-:x: Bad:
+| :x: **BAD:** |
+|:-------------|
+
 
 ```php
 final class InvalidTest extends TestCase
@@ -2166,7 +2239,8 @@ final class InvalidTest extends TestCase
 }
 ```
 
-:heavy_check_mark: Good:
+| :white_check_mark: **GOOD:** |
+|:-----------------------------|
 
 ```php
 final class ValidTest extends TestCase
@@ -2191,13 +2265,17 @@ final class ValidTest extends TestCase
 }
 ```
 
-:exclamation: Tests should only verify public API.
+| :exclamation: **WARNING** |
+|:--------------------------|
+Tests should only verify public API.
 
 ### Time as a volatile dependency
 
-:information_source: The time is a volatile dependency because it is non-deterministic. Each invocation returns a different result.
+The time is a volatile dependency because it is non-deterministic. Each invocation returns a different result.
 
-:x: Bad:
+| :x: **BAD:** |
+|:-------------|
+
 
 ```php
 final class Clock
@@ -2271,7 +2349,9 @@ final class InvalidTest extends TestCase
 }
 ```
 
-:heavy_check_mark: Good:
+| :white_check_mark: **GOOD:** |
+|:-----------------------------|
+
 
 ```php
 interface ClockInterface
@@ -2353,7 +2433,12 @@ final class ValidTest extends TestCase
 }
 ```
 
-:information_source: The time and random numbers should not be generated directly in the domain code. To test behavior we must have
+
+
+| :information_source: **INFORMATION** |
+|:-------------------------------------|
+
+The time and random numbers should not be generated directly in the domain code. To test behavior we must have
 deterministic results, so we need to inject these values into a domain object like in the example above.
 
 ## 100% Test Coverage shouldn't be the goal  
