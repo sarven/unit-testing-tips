@@ -550,6 +550,32 @@ final class TestExample extends TestCase
 }
 ```
 
+| :white_check_mark: **EVEN BETTER USING SPY:** |
+|:----------------------------------------------|
+
+```php
+final class TestExample extends TestCase
+{
+    /**
+     * @test
+     */
+    public function sends_all_notifications(): void
+    {
+        $message1 = new Message();
+        $message2 = new Message();
+        $messageRepository = new InMemoryMessageRepository();
+        $messageRepository->save($message1);
+        $messageRepository->save($message2);
+        $mailer = new SpyMailer();
+        $sut = new NotificationService($mailer, $messageRepository);
+
+        $sut->send();
+        
+        $mailer->assertThatMessagesHaveBeenSent([$message1, $message2]);
+    }
+}
+```
+
 ## Three styles of unit testing
 
 ### Output
