@@ -797,7 +797,7 @@ final class ValidUnitExampleTest extends TestCase
 ```php
 final class ApplicationService
 {
-    public function __construct(private SubscriptionRepositoryInterface $subscriptionRepository) {}
+    public function __construct(private readonly SubscriptionRepositoryInterface $subscriptionRepository) {}
 
     public function renewSubscription(int $subscriptionId): bool
     {
