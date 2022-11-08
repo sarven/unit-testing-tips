@@ -46,6 +46,8 @@ So in these examples, I will try to share some tips on what to do to write good 
 
 Test doubles are fake dependencies used in tests.
 
+![Test doubles](./assets/test-doubles.jpg "Test doubles")
+
 ### Stubs
 
 #### Dummy
