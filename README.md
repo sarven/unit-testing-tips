@@ -459,8 +459,8 @@ Example:
 final class NotificationService
 {
     public function __construct(
-        private MailerInterface $mailer,
-        private MessageRepositoryInterface $messageRepository
+        private readonly MailerInterface $mailer,
+        private readonly MessageRepositoryInterface $messageRepository
     ) {}
 
     public function send(): void
@@ -649,7 +649,7 @@ final class ExampleTest extends TestCase
 ```php
 final class NameService
 {
-    public function __construct(private CacheStorageInterface $cacheStorage) {}
+    public function __construct(private readonly CacheStorageInterface $cacheStorage) {}
 
     public function loadAll(): void
     {
@@ -680,7 +680,7 @@ Like in functional architecture, we need to separate a code with side effects an
 final class NameParser
 {
     /**
-     * @param array $namesData
+     * @param array<string[]> $namesData
      * @return Name[]
      */
     public function parse(array $namesData): array
@@ -714,9 +714,9 @@ final class CsvNamesFileLoader
 final class ApplicationService
 {
     public function __construct(
-        private CsvNamesFileLoader $fileLoader,
-        private NameParser $parser,
-        private CacheStorageInterface $cacheStorage
+        private readonly CsvNamesFileLoader $fileLoader,
+        private readonly NameParser $parser,
+        private readonly CacheStorageInterface $cacheStorage
     ) {}
 
     public function loadNames(): void
@@ -764,7 +764,7 @@ final class ValidUnitExampleTest extends TestCase
 ```php
 final class ApplicationService
 {
-    public function __construct(private SubscriptionRepositoryInterface $subscriptionRepository) {}
+    public function __construct(private readonly SubscriptionRepositoryInterface $subscriptionRepository) {}
 
     public function renewSubscription(int $subscriptionId): bool
     {
@@ -785,14 +785,9 @@ final class ApplicationService
 final class Subscription
 {
     private Status $status;
-
     private \DateTimeImmutable $modifiedAt;
-
-    public function __construct(Status $status, \DateTimeImmutable $modifiedAt)
-    {
-        $this->status = $status;
-        $this->modifiedAt = $modifiedAt;
-    }
+    
+    public function __construct(private Status $status, private \DateTimeImmutable $modifiedAt) {}
 
     public function getStatus(): Status
     {
@@ -861,7 +856,9 @@ final class InvalidTestExample extends TestCase
 ```php
 final class ApplicationService
 {
-    public function __construct(private SubscriptionRepositoryInterface $subscriptionRepository) {}
+    public function __construct(
+        private readonly SubscriptionRepositoryInterface $subscriptionRepository
+    ) {}
 
     public function renewSubscription(int $subscriptionId): bool
     {
@@ -875,7 +872,6 @@ final class ApplicationService
 final class Subscription
 {
     private Status $status;
-
     private \DateTimeImmutable $modifiedAt;
 
     public function __construct(\DateTimeImmutable $modifiedAt)
@@ -1098,9 +1094,7 @@ class Status
     private const NEW = 'new';
     private const SUSPENDED = 'suspended';
 
-    private string $status;
-
-    private function __construct(string $status)
+    private function __construct(private readonly string $status)
     {
         $this->status = $status;
     }
@@ -1264,9 +1258,7 @@ final class Status
     private const NEW = 'new';
     private const SUSPENDED = 'suspended';
 
-    private string $status;
-
-    private function __construct(string $status)
+    private function __construct(private readonly string $status)
     {
         $this->status = $status;
     }
@@ -1447,8 +1439,8 @@ How to properly unit test a class like this?
 class ApplicationService
 {
     public function __construct(
-        private OrderRepository $orderRepository,
-        private FormRepository $formRepository
+        private readonly OrderRepository $orderRepository,
+        private readonly FormRepository $formRepository
     ) {}
 
     public function changeFormStatus(int $orderId): void
@@ -1480,10 +1472,10 @@ class ApplicationService
 final class ApplicationService
 {
     public function __construct(
-        private OrderRepositoryInterface $orderRepository,
-        private FormRepositoryInterface $formRepository,
-        private FormApiInterface $formApi,
-        private ChangeFormStatusService $changeFormStatusService
+        private readonly OrderRepositoryInterface $orderRepository,
+        private readonly FormRepositoryInterface $formRepository,
+        private readonly FormApiInterface $formApi,
+        private readonly ChangeFormStatusService $changeFormStatusService
     ) {}
 
     public function changeFormStatus(int $orderId): void
@@ -1626,7 +1618,7 @@ final class EventSubscriberTest extends TestCase
 final class UserRepository
 {
     public function __construct(
-        private Connection $connection
+        private readonly Connection $connection
     ) {}
 
     public function getUserNameByEmail(string $email): ?array
@@ -1697,7 +1689,7 @@ final class TestUserRepository extends TestCase
 ```php
 final class InvalidTest extends TestCase
 {
-    private ?Subscription $subscription;
+    private Subscription $subscription;
 
     public function setUp(): void
     {
@@ -1985,7 +1977,7 @@ class DiscountCalculator
 ```php
 class OrderService
 {
-    public function __construct(private DiscountCalculator $discountCalculator) {}
+    public function __construct(private readonly DiscountCalculator $discountCalculator) {}
 
     public function getTotalPriceWithDiscount(int $totalPrice, int $vipFromDays): int
     {
@@ -2047,8 +2039,8 @@ final class InternalDiscountCalculator
 final class OrderService
 {
     public function __construct(
-        private InternalDiscountCalculator $discountCalculator,
-        private ExternalDiscountCalculatorInterface $externalDiscountCalculator
+        private readonly InternalDiscountCalculator $discountCalculator,
+        private readonly ExternalDiscountCalculatorInterface $externalDiscountCalculator
     ) {}
 
     public function getTotalPriceWithDiscount(int $totalPrice, int $vipFromDays): int
@@ -2094,12 +2086,7 @@ final class ValidTest extends TestCase
 ```php
 final class OrderItem
 {
-    public function __construct(private int $total) {}
-
-    public function getTotal(): int
-    {
-        return $this->total;
-    }
+    public function __construct(public readonly int $total) {}
 }
 ```
 
@@ -2120,7 +2107,7 @@ final class Order
     private function getItemsTotal(): int
     {
         return array_reduce(
-            array_map(fn (OrderItem $item) => $item->getTotal(), $this->items),
+            array_map(fn (OrderItem $item) => $item->total, $this->items),
             fn (int $sum, int $total) => $sum += $total,
             0
         );
@@ -2315,7 +2302,7 @@ final class Clock implements ClockInterface
 ```php
 final class FixedClock implements ClockInterface
 {
-    private function __construct(private \DateTimeImmutable $fixedDate) {}
+    private function __construct(private readonly \DateTimeImmutable $fixedDate) {}
 
     public static function create(\DateTimeImmutable $fixedDate): self
     {
@@ -2332,12 +2319,7 @@ final class FixedClock implements ClockInterface
 ```php
 final class Customer
 {
-    private \DateTimeImmutable $createdAt;
-
-    public function __construct(\DateTimeImmutable $createdAt)
-    {
-        $this->createdAt = $createdAt;
-    }
+    public function __construct(private readonly \DateTimeImmutable $createdAt) {}
 
     public function isVip(\DateTimeImmutable $currentDate): bool
     {
