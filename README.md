@@ -535,8 +535,9 @@ final class TestExample extends TestCase
     {
         $message1 = new Message();
         $message2 = new Message();
-        $messageRepository = $this->createStub(MessageRepositoryInterface::class);
-        $messageRepository->method('getAll')->willReturn([$message1, $message2]);
+        $messageRepository = new InMemoryMessageRepository();
+        $messageRepository->save($message1);
+        $messageRepository->save($message2);
         $mailer = $this->createMock(MailerInterface::class);
         $sut = new NotificationService($mailer, $messageRepository);
 
@@ -659,8 +660,9 @@ final class ExampleTest extends TestCase
     {
         $message1 = new Message();
         $message2 = new Message();
-        $messageRepository = $this->createStub(MessageRepositoryInterface::class);
-        $messageRepository->method('getAll')->willReturn([$message1, $message2]);
+        $messageRepository = new InMemoryMessageRepository();
+        $messageRepository->save($message1);
+        $messageRepository->save($message2);
         $mailer = $this->createMock(MailerInterface::class);
         $sut = new NotificationService($mailer, $messageRepository);
 
@@ -854,9 +856,7 @@ final class InvalidTestExample extends TestCase
     {
         $modifiedAt = new \DateTimeImmutable();
         $expiredSubscription = new Subscription(Status::expired(), $modifiedAt);
-        $repository = $this->createStub(SubscriptionRepositoryInterface::class);
-        $repository->method('findById')->willReturn($expiredSubscription);
-        $sut = new ApplicationService($repository);
+        $sut = new ApplicationService($this->createRepository($expiredSubscription));
 
         $result = $sut->renewSubscription(1);
 
@@ -872,14 +872,24 @@ final class InvalidTestExample extends TestCase
     {
         $modifiedAt = new \DateTimeImmutable();
         $activeSubscription = new Subscription(Status::active(), $modifiedAt);
-        $repository = $this->createStub(SubscriptionRepositoryInterface::class);
-        $repository->method('findById')->willReturn($activeSubscription);
-        $sut = new ApplicationService($repository);
+        $sut = new ApplicationService($this->createRepository($activeSubscription));
 
         $result = $sut->renewSubscription(1);
 
         self::assertSame($modifiedAt, $activeSubscription->getModifiedAt());
         self::assertFalse($result);
+    }
+    
+    private function createRepository(Subscription $subscription): SubscriptionRepositoryInterface
+    {
+        return new class ($expiredSubscription) implements SubscriptionRepositoryInterface {
+            public function __construct(private readonly Subscription $subscription) {} 
+            
+            public function findById(int $id): Subscription
+            {
+                return $this->subscription;
+            }
+        };
     }
 }
 ```
@@ -955,9 +965,7 @@ final class ValidTestExample extends TestCase
     public function renew_an_expired_subscription_is_possible(): void
     {
         $expiredSubscription = SubscriptionMother::expired();
-        $repository = $this->createStub(SubscriptionRepositoryInterface::class);
-        $repository->method('findById')->willReturn($expiredSubscription);
-        $sut = new ApplicationService($repository);
+        $sut = new ApplicationService($this->createRepository($expiredSubscription));
 
         $result = $sut->renewSubscription(1);
 
@@ -973,14 +981,24 @@ final class ValidTestExample extends TestCase
     public function renew_an_active_subscription_is_not_possible(): void
     {
         $activeSubscription = SubscriptionMother::active();
-        $repository = $this->createStub(SubscriptionRepositoryInterface::class);
-        $repository->method('findById')->willReturn($activeSubscription);
-        $sut = new ApplicationService($repository);
+        $sut = new ApplicationService($this->createRepository($activeSubscription));
 
         $result = $sut->renewSubscription(1);
 
         self::assertTrue($activeSubscription->isActive());
         self::assertFalse($result);
+    }
+    
+    private function createRepository(Subscription $subscription): SubscriptionRepositoryInterface
+    {
+        return new class ($expiredSubscription) implements SubscriptionRepositoryInterface {
+            public function __construct(private readonly Subscription $subscription) {} 
+            
+            public function findById(int $id): Subscription
+            {
+                return $this->subscription;
+            }
+        };
     }
 }
 ```
@@ -2129,8 +2147,12 @@ final class ValidTest extends TestCase
      */
     public function testGetTotalPriceWithDiscount(int $totalPrice, int $vipDaysFrom, int $expected): void
     {
-        $externalDiscountCalculator = $this->createStub(ExternalDiscountCalculatorInterface::class);
-        $externalDiscountCalculator->method('calculate')->willReturn(5);
+        $externalDiscountCalculator = new class() implements ExternalDiscountCalculatorInterface {
+            public function calculate(): int
+            {
+                return 5;
+            }
+        };
         $sut = new OrderService(new InternalDiscountCalculator(), $externalDiscountCalculator);
 
         self::assertSame($expected, $sut->getTotalPriceWithDiscount($totalPrice, $vipDaysFrom));
