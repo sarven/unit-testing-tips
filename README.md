@@ -1845,7 +1845,8 @@ final class InvalidTest extends TestCase
 }
 ```
 
-:heavy_check_mark: Good:
+| :heavy_check_mark: **GOOD:** |
+|:-----------------------------|
 
 ```php
 final class Customer
@@ -1889,7 +1890,10 @@ final class ValidTest extends TestCase
 }
 ```
 
-:exclamation: Adding additional production code (e.g. getter getCustomerType()) only to verify the state in tests is a bad practice.
+| :exclamation: **WARNING:** |
+|:---------------------------|
+
+Adding additional production code (e.g. getter getCustomerType()) only to verify the state in tests is a bad practice.
 It should be verified by another domain significant value (in this case getPercentageDiscount()). Of course, sometimes it can be tough to find another way to verify the operation, and we can be forced to add additional production code to verify correctness in tests, but we should try to avoid that.
 
 ### Leaking domain details
@@ -1905,7 +1909,8 @@ final class DiscountCalculator
 }
 ```
 
-:x: Bad:
+| :x: **BAD:** |
+|:-------------|
 
 ```php
 final class InvalidTest extends TestCase
@@ -1931,8 +1936,8 @@ final class InvalidTest extends TestCase
     }
 }
 ```
-
-:heavy_check_mark: Good:
+| :heavy_check_mark: **GOOD:** |
+|:-----------------------------|
 
 ```php
 final class ValidTest extends TestCase
@@ -1959,7 +1964,10 @@ final class ValidTest extends TestCase
 }
 ```
 
-:information_source: Don't duplicate the production logic in tests. Just verify results by hardcoded values.
+| :information_source: **INFORMATION:** |
+|:--------------------------------------|
+
+Don't duplicate the production logic in tests. Just verify results by hardcoded values.
 
 ### Mocking concrete classes
 
@@ -2023,7 +2031,9 @@ final class InvalidTest extends TestCase
 }
 ```
 
-:heavy_check_mark: Good:
+| :heavy_check_mark: **GOOD:** |
+|:-----------------------------|
+
 
 ```php
 interface ExternalDiscountCalculatorInterface
@@ -2087,7 +2097,10 @@ final class ValidTest extends TestCase
 }
 ```
 
-:information_source: The necessity to mock a concrete class to replace a part of its behavior means that this class is probably too complicated and violates the Single Responsibility Principle.
+| :information_source: **INFORMATION:** |
+|:--------------------------------------|
+
+The necessity to mock a concrete class to replace a part of its behavior means that this class is probably too complicated and violates the Single Responsibility Principle.
 
 ### Testing private methods
 
@@ -2128,7 +2141,9 @@ final class Order
 }
 ```
 
-:x: Bad:
+| :x: **BAD:** |
+|:-------------|
+
 
 ```php
 final class InvalidTest extends TestCase
@@ -2179,7 +2194,8 @@ final class InvalidTest extends TestCase
 }
 ```
 
-:heavy_check_mark: Good:
+| :heavy_check_mark: **GOOD:** |
+|:-----------------------------|
 
 ```php
 final class ValidTest extends TestCase
@@ -2204,15 +2220,15 @@ final class ValidTest extends TestCase
 }
 ```
 
-:exclamation: Tests should only verify public API.
+| :exclamation: **WARNING** |
+|:--------------------------|
+Tests should only verify public API.
 
 ### Time as a volatile dependency
 
-| :information_source: **INFORMATION** |
-|:-------------------------------------|
 The time is a volatile dependency because it is non-deterministic. Each invocation returns a different result.
 
-| :x: **Bad:** |
+| :x: **BAD:** |
 |:-------------|
 
 
@@ -2288,7 +2304,7 @@ final class InvalidTest extends TestCase
 }
 ```
 
-| :heavy_check_mark: **Good:** |
+| :heavy_check_mark: **GOOD:** |
 |:-----------------------------|
 
 
