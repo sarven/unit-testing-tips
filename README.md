@@ -170,13 +170,16 @@ $mailer
     ->with($this->equalTo($message));
 ```
 
-:exclamation: 
+| :exclamation: **WARNING:** |
+|:---------------------------|
 To verify incoming interactions, use a stub, but to verify outcoming interactions, use a mock. 
 More: [Mock vs Stub](#mock-vs-stub)
 
 ## Naming
 
-:heavy_minus_sign: Not good:
+| :x: **NOT GOOD:** |
+|:------------------|
+
 ```php
 public function test(): void
 {
@@ -188,7 +191,9 @@ public function test(): void
 }
 ```
 
-:heavy_check_mark: **Specify explicitly what you are testing**
+| :white_check_mark: **Specify explicitly what you are testing** |
+|:---------------------------------------------------------------|
+
 ```php
 public function sut(): void
 {
@@ -201,7 +206,8 @@ public function sut(): void
 }
 ``` 
 
-:heavy_minus_sign: Not good:
+| :x: **NOT GOOD:** |
+|:------------------|
 ```php
 public function it_throws_invalid_credentials_exception_when_sign_in_with_invalid_credentials(): void
 {
@@ -219,7 +225,9 @@ public function testDeactivateASubscription(): void
 }
 ```
 
-:heavy_check_mark: Better:  
+| :white_check_mark: **Better** |
+|:------------------------------|
+
 - **Using underscore improves readability**
 - **The name should describe the behavior, not the implementation**
 - **Use names without technical keywords. It should be readable for a non-programmer person.**
@@ -271,12 +279,15 @@ This kind of information has nothing to do with the domain, so we shouldn't use 
 
 It's also common Given, When, Then.
 
-:heavy_check_mark: Separate three sections of the test:  
+Separate three sections of the test:  
 
 - **Arrange**: Bring the system under test in the desired state. Prepare dependencies, arguments and finally construct
 the SUT.
 - **Act**: Invoke a tested element.
 - **Assert**: Verify the result, the final state, or the communication with collaborators.
+
+| :white_check_mark: **GOOD** |
+|:----------------------------|
 
 ```php
 public function aaa_pattern_example_test(): void
@@ -542,7 +553,9 @@ final class TestExample extends TestCase
 
 ### Output
 
-:heavy_check_mark:  The best option:  
+| :white_check_mark: **The best option:** |
+|:----------------------------------------|
+
 - **The best resistance to refactoring**
 - **The best accuracy**
 - **The lowest cost of maintainability**  
@@ -601,7 +614,9 @@ final class ExampleTest extends TestCase
 
 ### State
 
-:white_check_mark: Worse option:  
+| :heavy_minus_sign: **Worse option:** |
+|:-------------------------------------|
+
 - **Worse resistance to refactoring**
 - **Worse accuracy**
 - **Higher cost of maintainability**
@@ -627,7 +642,9 @@ final class ExampleTest extends TestCase
 
 ### Communication
 
-:white_check_mark: The worst option: 
+| :x: **The worst option:** |
+|:--------------------------|
+
 - **The worst resistance to refactoring**
 - **The worst accuracy**
 - **The highest cost of maintainability**
@@ -1233,7 +1250,10 @@ class SubscriptionTest extends TestCase
 }
 ```
 
-:exclamation: **Do not write code 1:1, 1 class : 1 test. It leads to fragile tests which make that refactoring is tough.**
+| :exclamation: **WARNING:** |
+|:---------------------------|
+
+**Do not write code 1:1, 1 class : 1 test. It leads to fragile tests which make that refactoring is tough.**
 
 | :white_check_mark: **GOOD:** |
 |:-----------------------------|
@@ -1496,7 +1516,10 @@ class ApplicationService
 }
 ```
 
-:heavy_check_mark: It's required to split up an overcomplicated code to separate classes.
+| :white_check_mark: **GOOD:** |
+|:-----------------------------|
+
+It's required to split up an overcomplicated code to separate classes.
 
 ```php
 final class ApplicationService
@@ -1639,7 +1662,9 @@ final class EventSubscriberTest extends TestCase
 }
 ```
 
-:exclamation: Testing the code without any complicated logic is senseless, but also leads to fragile tests.
+| :exclamation: **WARNING:** |
+|:---------------------------|
+Testing the code without any complicated logic is senseless, but also leads to fragile tests.
 
 ## Fragile test
 
@@ -1712,7 +1737,9 @@ final class TestUserRepository extends TestCase
 }
 ```
 
-:exclamation: Testing repositories in that way leads to fragile tests and then refactoring is tough. To test repositories write integration tests.
+| :exclamation: **WARNING:** |
+|:---------------------------|
+Testing repositories in that way leads to fragile tests and then refactoring is tough. To test repositories write integration tests.
 
 ## Test fixtures
 
