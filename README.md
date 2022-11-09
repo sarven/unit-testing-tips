@@ -175,6 +175,67 @@ $mailer
 To verify incoming interactions, use a stub, but to verify outcoming interactions, use a mock. 
 More: [Mock vs Stub](#mock-vs-stub)
 
+### Always prefer own test double classes than those provided by a framework
+
+| :x: **NOT GOOD:** |
+|:------------------|
+
+```php
+final class TestExample extends TestCase
+{
+    /**
+     * @test
+     */
+    public function sends_all_notifications(): void
+    {
+        $message1 = new Message();
+        $message2 = new Message();
+        $messageRepository = $this->createMock(MessageRepositoryInterface::class);
+        $messageRepository->method('getAll')->willReturn([$message1, $message2]);
+        $mailer = $this->createMock(MailerInterface::class);
+        $sut = new NotificationService($mailer, $messageRepository);
+
+        $mailer->expects(self::exactly(2))->method('send')
+            ->withConsecutive([self::equalTo($message1)], [self::equalTo($message2)]);
+
+        $sut->send();
+    }
+}
+```
+
+| :white_check_mark: **BETTER:** |
+|:-------------------------------|
+
+- **Better resistance to refactoring** 
+  - Using Refactor->Rename on the particular method doesn't break the test
+- **Better readability**
+- **Lower cost of maintainability** 
+  - Not required to learn those sophisticated mocks frameworks 
+  - Just simple plain PHP code
+
+```php
+final class TestExample extends TestCase
+{
+    /**
+     * @test
+     */
+    public function sends_all_notifications(): void
+    {
+        $message1 = new Message();
+        $message2 = new Message();
+        $messageRepository = new InMemoryMessageRepository();
+        $messageRepository->save($message1);
+        $messageRepository->save($message2);
+        $mailer = new SpyMailer();
+        $sut = new NotificationService($mailer, $messageRepository);
+
+        $sut->send();
+        
+        $mailer->assertThatMessagesHaveBeenSent([$message1, $message2]);
+    }
+}
+```
+
 ## Naming
 
 | :x: **NOT GOOD:** |
