@@ -16,31 +16,32 @@ So in these examples, I will try to share some tips on what to do to write good 
 3. [Naming](#naming)
 4. [AAA pattern](#aaa-pattern)
 5. [Object mother](#object-mother)
-6. [Parameterized test](#parameterized-test)
-7. [Two schools of unit testing](#two-schools-of-unit-testing)
+6. [Builder](#builder)
+7. [Parameterized test](#parameterized-test)
+8. [Two schools of unit testing](#two-schools-of-unit-testing)
    * [Classical](#classical)
    * [Mockist](#mockist)
    * [Dependencies](#dependencies)
-8. [Mock vs Stub](#mock-vs-stub)
-9. [Three styles of unit testing](#three-styles-of-unit-testing)
+9. [Mock vs Stub](#mock-vs-stub)
+10. [Three styles of unit testing](#three-styles-of-unit-testing)
     * [Output](#output)
     * [State](#state)
     * [Communication](#communication)
-10. [Functional architecture and tests](#functional-architecture-and-tests)
-11. [Observable behavior vs implementation details](#observable-behavior-vs-implementation-details)
-12. [Unit of behavior](#unit-of-behavior)
-13. [Humble pattern](#humble-pattern)
-14. [Trivial test](#trivial-test)
-15. [Fragile test](#fragile-test)
-16. [Test fixtures](#test-fixtures)
-17. [General testing anti-patterns](#general-testing-anti-patterns)
+11. [Functional architecture and tests](#functional-architecture-and-tests)
+12. [Observable behavior vs implementation details](#observable-behavior-vs-implementation-details)
+13. [Unit of behavior](#unit-of-behavior)
+14. [Humble pattern](#humble-pattern)
+15. [Trivial test](#trivial-test)
+16. [Fragile test](#fragile-test)
+17. [Test fixtures](#test-fixtures)
+18. [General testing anti-patterns](#general-testing-anti-patterns)
     * [Exposing private state](#exposing-private-state)
     * [Leaking domain details](#leaking-domain-details)
     * [Mocking concrete classes](#mocking-concrete-classes)
     * [Testing private methods](#testing-private-methods)
     * [Time as a volatile dependency](#time-as-a-volatile-dependency)
-18. [100% Test Coverage shouldn't be the goal](#100-test-coverage-shouldnt-be-the-goal)
-19. [Recommended books](#recommended-books)
+19. [100% Test Coverage shouldn't be the goal](#100-test-coverage-shouldnt-be-the-goal)
+20. [Recommended books](#recommended-books)
 
 ## Test doubles
 
@@ -412,6 +413,65 @@ final class ExampleTest
         // do something
 
         // check something
+    }
+}
+```
+
+## Builder
+
+Builder is another pattern that helps us to create objects in tests. Compared to Object Mother pattern Builder is better for creating
+more complex objects.
+
+```php
+final class OrderBuilder
+{
+    private DateTimeImmutable|null $createdAt = null;
+
+    /**
+     * @var OrderItem[]
+     */
+    private array $items = [];
+
+    public function createdAt(DateTimeImmutable $createdAt): self
+    {
+        $this->createdAt = $createdAt;
+        return $this;
+    }
+
+    public function withItem(string $name, int $price): self
+    {
+        $this->items[] = new OrderItem($name, $price);
+        return $this;
+    }
+
+    public function build(): Order
+    {
+        Assert::notEmpty($this->items);
+
+        return new Order(
+            $this->createdAt ?? new DateTimeImmutable(),
+            $this->items,
+        );
+    }
+}
+```
+
+```php
+final class ExampleTest extends TestCase
+{
+    /**
+     * @test
+     */
+    public function example_test_with_order_builder(): void
+    {
+        $order = (new OrderBuilder())
+            ->createdAt(new DateTimeImmutable('2022-11-10 20:00:00'))
+            ->withItem('Item 1', 1000)
+            ->withItem('Item 2', 2000)
+            ->withItem('Item 3', 3000)
+            ->build();
+
+        self::assertSame(6000, $order->getTotal());
     }
 }
 ```
@@ -1946,7 +2006,7 @@ final class ValidTest extends TestCase
 - It's better to avoid a shared state between tests.
 - To reuse elements between a few tests:
     * private factory methods - reusing in one class (like above)
-    * [Object mother]((#object-mother)) - reusing in a few classes
+    * [Object mother]((#object-mother)) or [Builder]((#builder)) - reusing in a few classes
 
 ## General testing anti-patterns
 
