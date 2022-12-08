@@ -2006,7 +2006,7 @@ final class ValidTest extends TestCase
 - It's better to avoid a shared state between tests.
 - To reuse elements between a few tests:
     * private factory methods - reusing in one class (like above)
-    * [Object mother]((#object-mother)) or [Builder]((#builder)) - reusing in a few classes
+    * [Object mother](#object-mother) or [Builder](#builder) - reusing in a few classes
 
 ## General testing anti-patterns
 
