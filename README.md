@@ -471,7 +471,9 @@ final class ExampleTest extends TestCase
             ->withItem('Item 3', 3000)
             ->build();
 
-        self::assertSame(6000, $order->getTotal());
+        // do something
+
+        // check something
     }
 }
 ```
