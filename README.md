@@ -17,31 +17,32 @@ So in these examples, I will try to share some tips on what to do to write good 
 4. [AAA pattern](#aaa-pattern)
 5. [Object mother](#object-mother)
 6. [Builder](#builder)
-7. [Parameterized test](#parameterized-test)
-8. [Two schools of unit testing](#two-schools-of-unit-testing)
+7. [Assert object](#assert-object)
+8. [Parameterized test](#parameterized-test)
+9. [Two schools of unit testing](#two-schools-of-unit-testing)
    * [Classical](#classical)
    * [Mockist](#mockist)
    * [Dependencies](#dependencies)
-9. [Mock vs Stub](#mock-vs-stub)
-10. [Three styles of unit testing](#three-styles-of-unit-testing)
+10. [Mock vs Stub](#mock-vs-stub)
+11. [Three styles of unit testing](#three-styles-of-unit-testing)
     * [Output](#output)
     * [State](#state)
     * [Communication](#communication)
-11. [Functional architecture and tests](#functional-architecture-and-tests)
-12. [Observable behavior vs implementation details](#observable-behavior-vs-implementation-details)
-13. [Unit of behavior](#unit-of-behavior)
-14. [Humble pattern](#humble-pattern)
-15. [Trivial test](#trivial-test)
-16. [Fragile test](#fragile-test)
-17. [Test fixtures](#test-fixtures)
-18. [General testing anti-patterns](#general-testing-anti-patterns)
+12. [Functional architecture and tests](#functional-architecture-and-tests)
+13. [Observable behavior vs implementation details](#observable-behavior-vs-implementation-details)
+14. [Unit of behavior](#unit-of-behavior)
+15. [Humble pattern](#humble-pattern)
+16. [Trivial test](#trivial-test)
+17. [Fragile test](#fragile-test)
+18. [Test fixtures](#test-fixtures)
+19. [General testing anti-patterns](#general-testing-anti-patterns)
     * [Exposing private state](#exposing-private-state)
     * [Leaking domain details](#leaking-domain-details)
     * [Mocking concrete classes](#mocking-concrete-classes)
     * [Testing private methods](#testing-private-methods)
     * [Time as a volatile dependency](#time-as-a-volatile-dependency)
-19. [100% Test Coverage shouldn't be the goal](#100-test-coverage-shouldnt-be-the-goal)
-20. [Recommended books](#recommended-books)
+20. [100% Test Coverage shouldn't be the goal](#100-test-coverage-shouldnt-be-the-goal)
+21. [Recommended books](#recommended-books)
 
 ## Test doubles
 
@@ -474,6 +475,57 @@ final class ExampleTest extends TestCase
         // do something
 
         // check something
+    }
+}
+```
+
+## Assert object
+
+Assert object pattern helps write more readable assert sections. Instead of using a few asserts, we can just prepare an abstraction,
+and use natural language to describe what result is expected.
+
+```php
+final class ExampleTest extends TestCase
+{
+    /**
+     * @test
+     */
+    public function example_test_with_asserter(): void
+    {
+        $currentTime = new DateTimeImmutable('2022-11-10 20:00:00');
+        $sut = new OrderService();
+
+        $order = $sut->create($currentTime);
+
+        OrderAsserter::assertThat($order)
+            ->wasCreatedAt($currentTime)
+            ->hasTotal(6000);
+    }
+}
+```
+
+```php
+use PHPUnit\Framework\Assert;
+
+final class OrderAsserter
+{
+    public function __construct(private readonly Order $order) {}
+
+    public static function assertThat(Order $order): self
+    {
+        return new OrderAsserter($order);
+    }
+
+    public function wasCreatedAt(DateTimeImmutable $createdAt): self
+    {
+        Assert::assertEquals($createdAt, $this->order->createdAt);
+        return $this;
+    }
+
+    public function hasTotal(int $total): self
+    {
+        Assert::assertSame($total, $this->order->getTotal());
+        return $this;
     }
 }
 ```
