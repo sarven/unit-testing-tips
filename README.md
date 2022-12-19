@@ -47,12 +47,16 @@ So in these examples, I will try to share some tips on what to do to write good 
 
 ## Author
 :construction_worker: **Kamil Ruczyński**  
+  
 **Twitter:** [https://twitter.com/Sarvendev](https://twitter.com/Sarvendev)  
 **Blog:** [https://sarvendev.com/](https://sarvendev.com/)  
 **LinkedIn:** [https://www.linkedin.com/in/kamilruczynski/](https://www.linkedin.com/in/kamilruczynski/)
 
 I have a lot of plans to write more about good practices, not only regarding unit tests, but also other levels of tests.
-Of course, it requires a lot of time, so if you want to motivate me please give a star to this repository and follow me on Twitter and Github to be up-to-date with all updates.
+Of course, it requires a lot of time, so if you want to motivate me please give a star to this repository 
+and follow me on Twitter and Github to be up-to-date with all updates.  
+
+If you have any improvement ideas or a topic to write about, feel free to prepare a pull request or just let me know.
 
 ## Test doubles
 
@@ -2686,7 +2690,8 @@ Mutation testing gives better feedback about the quality of tests.
 - [Unit Testing Principles, Practices, and Patterns / Vladimir Khorikov](https://amzn.to/3PCMD7f) - the best book about tests I've ever read
 
 ## Author
-**Kamil Ruczyński**  
+:construction_worker: **Kamil Ruczyński**  
+  
 **Twitter:** [https://twitter.com/Sarvendev](https://twitter.com/Sarvendev)  
 **Blog:** [https://sarvendev.com/](https://sarvendev.com/)  
 **LinkedIn:** [https://www.linkedin.com/in/kamilruczynski/](https://www.linkedin.com/in/kamilruczynski/)  
