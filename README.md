@@ -12,37 +12,47 @@ So in these examples, I will try to share some tips on what to do to write good 
 ## Table of Contents
 
 1. [Introduction](#introduction)
-2. [Test doubles](#test-doubles)
-3. [Naming](#naming)
-4. [AAA pattern](#aaa-pattern)
-5. [Object mother](#object-mother)
-6. [Builder](#builder)
-7. [Assert object](#assert-object)
-8. [Parameterized test](#parameterized-test)
-9. [Two schools of unit testing](#two-schools-of-unit-testing)
+2. [Author](#author)
+3. [Test doubles](#test-doubles)
+4. [Naming](#naming)
+5. [AAA pattern](#aaa-pattern)
+6. [Object mother](#object-mother)
+7. [Builder](#builder)
+8. [Assert object](#assert-object)
+9. [Parameterized test](#parameterized-test)
+10. [Two schools of unit testing](#two-schools-of-unit-testing)
    * [Classical](#classical)
    * [Mockist](#mockist)
    * [Dependencies](#dependencies)
-10. [Mock vs Stub](#mock-vs-stub)
-11. [Three styles of unit testing](#three-styles-of-unit-testing)
+11. [Mock vs Stub](#mock-vs-stub)
+12. [Three styles of unit testing](#three-styles-of-unit-testing)
     * [Output](#output)
     * [State](#state)
     * [Communication](#communication)
-12. [Functional architecture and tests](#functional-architecture-and-tests)
-13. [Observable behavior vs implementation details](#observable-behavior-vs-implementation-details)
-14. [Unit of behavior](#unit-of-behavior)
-15. [Humble pattern](#humble-pattern)
-16. [Trivial test](#trivial-test)
-17. [Fragile test](#fragile-test)
-18. [Test fixtures](#test-fixtures)
-19. [General testing anti-patterns](#general-testing-anti-patterns)
+13. [Functional architecture and tests](#functional-architecture-and-tests)
+14. [Observable behavior vs implementation details](#observable-behavior-vs-implementation-details)
+15. [Unit of behavior](#unit-of-behavior)
+16. [Humble pattern](#humble-pattern)
+17. [Trivial test](#trivial-test)
+18. [Fragile test](#fragile-test)
+19. [Test fixtures](#test-fixtures)
+20. [General testing anti-patterns](#general-testing-anti-patterns)
     * [Exposing private state](#exposing-private-state)
     * [Leaking domain details](#leaking-domain-details)
     * [Mocking concrete classes](#mocking-concrete-classes)
     * [Testing private methods](#testing-private-methods)
     * [Time as a volatile dependency](#time-as-a-volatile-dependency)
-20. [100% Test Coverage shouldn't be the goal](#100-test-coverage-shouldnt-be-the-goal)
-21. [Recommended books](#recommended-books)
+21. [100% Test Coverage shouldn't be the goal](#100-test-coverage-shouldnt-be-the-goal)
+22. [Recommended books](#recommended-books)
+
+## Author
+:construction_worker: **Kamil Ruczyński**  
+**Twitter:** [https://twitter.com/Sarvendev](https://twitter.com/Sarvendev)  
+**Blog:** [https://sarvendev.com/](https://sarvendev.com/)  
+**LinkedIn:** [https://www.linkedin.com/in/kamilruczynski/](https://www.linkedin.com/in/kamilruczynski/)
+
+I have a lot of plans to write more about good practices, not only regarding unit tests, but also other levels of tests.
+Of course, it requires a lot of time, so if you want to motivate me please give a star to this repository and follow me on Twitter and Github to be up-to-date with all updates.
 
 ## Test doubles
 
@@ -2672,10 +2682,11 @@ Mutation testing gives better feedback about the quality of tests.
 
 ## Recommended books
 
-- [Test Driven Development: By Example / Kent Beck](https://www.amazon.com/gp/product/0321146530/)  - the classic
-- [Unit Testing Principles, Practices, and Patterns / Vladimir Khorikov](https://www.amazon.com/Unit-Testing-Principles-Practices-Patterns/dp/1617296279) - the best book about tests I've ever read
+- [Test Driven Development: By Example / Kent Beck](https://amzn.to/3HImbax)  - the classic
+- [Unit Testing Principles, Practices, and Patterns / Vladimir Khorikov](https://amzn.to/3PCMD7f) - the best book about tests I've ever read
 
 ## Author
-**Twitter:** [Kamil "sarven" Ruczyński](https://twitter.com/Sarvendev)  
-**Blog EN:** [https://sarvendev.com/en/](https://sarvendev.com/en/)  
-**Blog PL:** [https://sarvendev.com/](https://sarvendev.com/)
+**Kamil Ruczyński**  
+**Twitter:** [https://twitter.com/Sarvendev](https://twitter.com/Sarvendev)  
+**Blog:** [https://sarvendev.com/](https://sarvendev.com/)  
+**LinkedIn:** [https://www.linkedin.com/in/kamilruczynski/](https://www.linkedin.com/in/kamilruczynski/)  
