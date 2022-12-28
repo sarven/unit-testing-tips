@@ -1968,55 +1968,53 @@ Testing repositories in that way leads to fragile tests and then refactoring is 
 
 ## Test fixtures
 
-| :x: **BAD:** |
-|:-------------|
-
-```php
-final class InvalidTest extends TestCase
-{
-    private Subscription $subscription;
-
-    public function setUp(): void
-    {
-        $this->subscription = new Subscription(new \DateTimeImmutable());
-        $this->subscription->activate();
-    }
-
-    /**
-     * @test
-     */
-    public function suspending_an_active_subscription_with_cannot_suspend_new_policy_is_possible(): void
-    {
-        $result = $this->subscription->suspend(new CannotSuspendNewSubscriptionPolicy(), new \DateTimeImmutable());
-
-        self::assertTrue($result);
-    }
-
-    /**
-     * @test
-     */
-    public function suspending_an_active_subscription_with_cannot_suspend_expired_policy_is_possible(): void
-    {
-        $result = $this->subscription->suspend(new CannotSuspendExpiredSubscriptionPolicy(), new \DateTimeImmutable());
-
-        self::assertTrue($result);
-    }
-
-    /**
-     * @test
-     */
-    public function suspending_a_new_subscription_with_cannot_suspend_new_policy_is_not_possible(): void
-    {
-        // Here we need to create a new subscription, it is not possible to change $this->subscription to a new subscription
-    }
-}
-```
-
 | :white_check_mark: **GOOD:** |
 |:-----------------------------|
 
 ```php
-final class ValidTest extends TestCase
+final class GoodTest extends TestCase
+{
+    private SubscriptionFactory $sut;
+
+    public function setUp(): void
+    {
+        $this->sut = new SubscriptionFactory();
+    }
+
+    /**
+     * @test
+     */
+    public function creates_a_subscription_for_a_given_date_range(): void
+    {
+        $result = $this->sut->create(new \DateTimeImmutable(), new \DateTimeImmutable('now +1 year'));
+
+        self::assertInstanceOf(Subscription::class, $result);
+    }
+
+    /**
+     * @test
+     */
+    public function throws_an_exception_on_invalid_date_range(): void
+    {
+        $this->expectException(CreateSubscriptionException::class);
+        
+        $result = $this->sut->create(new \DateTimeImmutable('now -1 year'), new \DateTimeImmutable());
+    }
+}
+```
+
+| :information_source: **INFORMATION:** |
+|:--------------------------------------|
+
+- The best case for using the setUp method will be testing stateless objects. 
+- Any configuration made inside `setUp` couples tests together, and has impact on all tests.
+- It's better to avoid a shared state between tests and configure the initial state accordingly to test method.
+- Readability is worse compared to configuration made in the proper test method.
+
+| :white_check_mark: **BETTER:** |
+|:-------------------------------|
+```php
+final class BetterTest extends TestCase
 {
     /**
      * @test
@@ -2063,6 +2061,7 @@ final class ValidTest extends TestCase
     {
         $subscription = new Subscription(new \DateTimeImmutable());
         $subscription->activate();
+        
         return $subscription;
     }
 }
@@ -2071,10 +2070,12 @@ final class ValidTest extends TestCase
 | :information_source: **INFORMATION:** |
 |:--------------------------------------|
 
-- It's better to avoid a shared state between tests.
-- To reuse elements between a few tests:
-    * private factory methods - reusing in one class (like above)
-    * [Object mother](#object-mother) or [Builder](#builder) - reusing in a few classes
+- This approach improves readability and clarifies the separation (code is more read than written).
+- Private helpers can be tedious to use in each test method, although they provide explicit intentions.
+
+To share similar testing objects between multiple test classes use:
+- [Object mother](#object-mother) 
+- [Builder](#builder) 
 
 ## General testing anti-patterns
 
