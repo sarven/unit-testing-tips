@@ -1034,9 +1034,6 @@ final class ApplicationService
 ```php
 final class Subscription
 {
-    private Status $status;
-    private \DateTimeImmutable $modifiedAt;
-    
     public function __construct(private Status $status, private \DateTimeImmutable $modifiedAt) {}
 
     public function getStatus(): Status
