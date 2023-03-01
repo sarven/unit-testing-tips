@@ -1,6 +1,4 @@
-# Unit testing tips by examples in PHP
-
-## Introduction
+# Testing tips
 
 In these times, the benefits of writing unit tests are huge.
 I think that most of the recently started projects contain any unit tests.
@@ -8,6 +6,19 @@ In enterprise applications with a lot of business logic, unit tests are the most
 because they are fast and can us instantly assure that our implementation is correct.
 However, I often see a problem with good tests in projects, though these tests' benefits are only huge when you have good unit tests.
 So in these examples, I will try to share some tips on what to do to write good unit tests.
+
+## Author
+:construction_worker: **Kamil Ruczyński**
+
+**Twitter:** [https://twitter.com/Sarvendev](https://twitter.com/Sarvendev)  
+**Blog:** [https://sarvendev.com/](https://sarvendev.com/)  
+**LinkedIn:** [https://www.linkedin.com/in/kamilruczynski/](https://www.linkedin.com/in/kamilruczynski/)
+
+I have a lot of plans to write more about good practices, not only regarding unit tests, but also other levels of tests.
+Of course, it requires a lot of time, so if you want to motivate me please give a star to this repository
+and follow me on Twitter and Github to be up-to-date with all updates.
+
+If you have any improvement ideas or a topic to write about, feel free to prepare a pull request or just let me know.
 
 ## Table of Contents
 
@@ -45,18 +56,6 @@ So in these examples, I will try to share some tips on what to do to write good 
 21. [100% Test Coverage shouldn't be the goal](#100-test-coverage-shouldnt-be-the-goal)
 22. [Recommended books](#recommended-books)
 
-## Author
-:construction_worker: **Kamil Ruczyński**  
-  
-**Twitter:** [https://twitter.com/Sarvendev](https://twitter.com/Sarvendev)  
-**Blog:** [https://sarvendev.com/](https://sarvendev.com/)  
-**LinkedIn:** [https://www.linkedin.com/in/kamilruczynski/](https://www.linkedin.com/in/kamilruczynski/)
-
-I have a lot of plans to write more about good practices, not only regarding unit tests, but also other levels of tests.
-Of course, it requires a lot of time, so if you want to motivate me please give a star to this repository 
-and follow me on Twitter and Github to be up-to-date with all updates.  
-
-If you have any improvement ideas or a topic to write about, feel free to prepare a pull request or just let me know.
 
 ## Test doubles
 
@@ -186,10 +185,9 @@ $mailer
     ->with($this->equalTo($message));
 ```
 
-| :exclamation: **WARNING:** |
-|:---------------------------|
-To verify incoming interactions, use a stub, but to verify outcoming interactions, use a mock. 
-More: [Mock vs Stub](#mock-vs-stub)
+> [!ATTENTION] 
+> To verify incoming interactions, use a stub, but to verify outcoming interactions, use a mock.   
+> More: [Mock vs Stub](#mock-vs-stub)
 
 ### Always prefer own test double classes than those provided by a framework
 
@@ -222,12 +220,12 @@ final class TestExample extends TestCase
 | :white_check_mark: **BETTER:** |
 |:-------------------------------|
 
-- **Better resistance to refactoring** 
-  - Using Refactor->Rename on the particular method doesn't break the test
+- **Better resistance to refactoring**
+    - Using Refactor->Rename on the particular method doesn't break the test
 - **Better readability**
-- **Lower cost of maintainability** 
-  - Not required to learn those sophisticated mocks frameworks 
-  - Just simple plain PHP code
+- **Lower cost of maintainability**
+    - Not required to learn those sophisticated mocks frameworks
+    - Just simple plain PHP code
 
 ```php
 final class TestExample extends TestCase
@@ -331,35 +329,24 @@ public function deactivating_an_inactive_subscription_is_invalid(): void
 }
 ```
 
-| :information_source: **INFORMATION:** |
-|:--------------------------------------|
-
-Describing the behavior is important in testing the domain scenarios. 
-If your code is just a utility one it's less important.
-
-
-| :question: **QUESTION:** |
-|:-------------------------|
-
-Why would it be useful for a non-programmer to read unit tests?  
-
-If there is a project with complex domain logic, this logic must be very clear for everyone, 
-so then tests describe domain details without technical keywords, and you can talk with a business in a language like in these tests.
-
-All code that is related to the domain should be free from technical details. A non-programmer won't be read these tests. 
-If you want to talk about the domain these tests will be useful to know what this domain does. 
-There will be a description without technical details e.g., returns null, throws an exception, etc. 
-This kind of information has nothing to do with the domain, so we shouldn't use these keywords.
+> [!NOTE]
+> Describing the behavior is important in testing the domain scenarios.
+> If your code is just a utility one it's less important.
+> 
+> **Why would it be useful for a non-programmer to read unit tests?**   
+> 
+> If there is a project with complex domain logic, this logic must be very clear for everyone, so then tests describe domain details without technical keywords, and you can talk with a business in a language like in these tests.
+> All code that is related to the domain should be free from technical details. A non-programmer won't be read these tests. If you want to talk about the domain these tests will be useful to know what this domain does. There will be a description without technical details e.g., returns null, throws an exception, etc. This kind of information has nothing to do with the domain, so we shouldn't use these keywords.
 
 
 ## AAA pattern
 
 It's also common Given, When, Then.
 
-Separate three sections of the test:  
+Separate three sections of the test:
 
 - **Arrange**: Bring the system under test in the desired state. Prepare dependencies, arguments and finally construct
-the SUT.
+  the SUT.
 - **Act**: Invoke a tested element.
 - **Assert**: Verify the result, the final state, or the communication with collaborators.
 
@@ -546,9 +533,10 @@ final class OrderAsserter
 
 ## Parameterized test
 
-The parameterized test is a good option to test the SUT with many parameters without repeating the code.  
+The parameterized test is a good option to test the SUT with many parameters without repeating the code.
 
-:thumbsdown: This kind of test is less readable. To increase the readability a little, negative and positive examples should be split up to different tests.
+> [!WARNING]
+> :thumbsdown: This kind of test is less readable. To increase the readability a little, negative and positive examples should be split up to different tests.
 
 ```php
 final class ExampleTest extends TestCase
@@ -605,7 +593,7 @@ final class ExampleTest extends TestCase
 
 ### Classical (Detroit school)
 
-- The unit is a single unit of behavior, it can be a few related classes. 
+- The unit is a single unit of behavior, it can be a few related classes.
 - Every test should be isolated from others. So it must be possible to invoke them in parallel or in any order.
 
 ```php
@@ -652,10 +640,8 @@ final class TestExample extends TestCase
 }
 ```
 
-| :information_source: **INFORMATION:** |
-|:--------------------------------------|
-
-**The classical approach is better to avoid fragile tests.**
+> [!NOTE]
+> **The classical approach is better to avoid fragile tests.**
 
 ### Dependencies
 
@@ -663,7 +649,7 @@ final class TestExample extends TestCase
 
 ## Mock vs. Stub
 
-Example: 
+Example:
 ```php
 final class NotificationService
 {
@@ -774,7 +760,7 @@ final class TestExample extends TestCase
 
 - **The best resistance to refactoring**
 - **The best accuracy**
-- **The lowest cost of maintainability**  
+- **The lowest cost of maintainability**
 - **If it is possible, you should prefer this kind of test**
 
 ```php
@@ -1215,12 +1201,10 @@ final class ValidTestExample extends TestCase
 }
 ```
 
-| :information_source: **INFORMATION:** |
-|:--------------------------------------|
-
-The first subscription model has a bad design. To invoke one business operation you need to call three methods. Also using getters to verify operation is not a good practice.
-In this case, it's skipped checking a change of `modifiedAt`, probably setting specific `modifiedAt` during a renew operation can be tested with an expiration business operation. The getter for `modifiedAt` is not required.
-Of course, there are cases where finding the possibility to avoid getters provided only for tests will be very hard, but always we should try not to introduce them.
+> [!NOTE]
+> The first subscription model has a bad design. To invoke one business operation you need to call three methods. Also using getters to verify operation is not a good practice.
+> In this case, it's skipped checking a change of `modifiedAt`, probably setting specific `modifiedAt` during a renew operation can be tested with an expiration business operation. The getter for `modifiedAt` is not required.
+> Of course, there are cases where finding the possibility to avoid getters provided only for tests will be very hard, but always we should try not to introduce them.
 
 ## Unit of behavior
 
@@ -1474,10 +1458,8 @@ class SubscriptionTest extends TestCase
 }
 ```
 
-| :exclamation: **WARNING:** |
-|:---------------------------|
-
-**Do not write code 1:1, 1 class : 1 test. It leads to fragile tests which make that refactoring is tough.**
+> [!ATTENTION]
+> **Do not write code 1:1, 1 class : 1 test. It leads to fragile tests which make that refactoring is tough.**
 
 | :white_check_mark: **GOOD:** |
 |:-----------------------------|
@@ -1884,9 +1866,9 @@ final class EventSubscriberTest extends TestCase
 }
 ```
 
-| :exclamation: **WARNING:** |
-|:---------------------------|
-Testing the code without any complicated logic is senseless, but also leads to fragile tests.
+
+> [!ATTENTION]
+> Testing the code without any complicated logic is senseless, but also leads to fragile tests.
 
 ## Fragile test
 
@@ -1959,9 +1941,8 @@ final class TestUserRepository extends TestCase
 }
 ```
 
-| :exclamation: **WARNING:** |
-|:---------------------------|
-Testing repositories in that way leads to fragile tests and then refactoring is tough. To test repositories write integration tests.
+> [!ATTENTION]
+> Testing repositories in that way leads to fragile tests and then refactoring is tough. To test repositories write integration tests.
 
 ## Test fixtures
 
@@ -2000,13 +1981,11 @@ final class GoodTest extends TestCase
 }
 ```
 
-| :information_source: **INFORMATION:** |
-|:--------------------------------------|
-
-- The best case for using the setUp method will be testing stateless objects. 
-- Any configuration made inside `setUp` couples tests together, and has impact on all tests.
-- It's better to avoid a shared state between tests and configure the initial state accordingly to test method.
-- Readability is worse compared to configuration made in the proper test method.
+> [!NOTE]
+> - The best case for using the setUp method will be testing stateless objects.
+> - Any configuration made inside `setUp` couples tests together, and has impact on all tests.
+> - It's better to avoid a shared state between tests and configure the initial state accordingly to test method.
+> - Readability is worse compared to configuration made in the proper test method.
 
 | :white_check_mark: **BETTER:** |
 |:-------------------------------|
@@ -2064,15 +2043,13 @@ final class BetterTest extends TestCase
 }
 ```
 
-| :information_source: **INFORMATION:** |
-|:--------------------------------------|
+> [!NOTE]
+> - This approach improves readability and clarifies the separation (code is more read than written).
+> - Private helpers can be tedious to use in each test method, although they provide explicit intentions.
 
-- This approach improves readability and clarifies the separation (code is more read than written).
-- Private helpers can be tedious to use in each test method, although they provide explicit intentions.
-
-To share similar testing objects between multiple test classes use:
-- [Object mother](#object-mother) 
-- [Builder](#builder) 
+> To share similar testing objects between multiple test classes use:
+> - [Object mother](#object-mother)
+> - [Builder](#builder)
 
 ## General testing anti-patterns
 
@@ -2170,11 +2147,10 @@ final class ValidTest extends TestCase
 }
 ```
 
-| :exclamation: **WARNING:** |
-|:---------------------------|
 
-Adding additional production code (e.g. getter getCustomerType()) only to verify the state in tests is a bad practice.
-It should be verified by another domain significant value (in this case getPercentageDiscount()). Of course, sometimes it can be tough to find another way to verify the operation, and we can be forced to add additional production code to verify correctness in tests, but we should try to avoid that.
+> [!ATTENTION]
+> Adding additional production code (e.g. getter getCustomerType()) only to verify the state in tests is a bad practice.
+> It should be verified by another domain significant value (in this case getPercentageDiscount()). Of course, sometimes it can be tough to find another way to verify the operation, and we can be forced to add additional production code to verify correctness in tests, but we should try to avoid that.
 
 ### Leaking domain details
 
@@ -2244,10 +2220,9 @@ final class ValidTest extends TestCase
 }
 ```
 
-| :information_source: **INFORMATION:** |
-|:--------------------------------------|
 
-Don't duplicate the production logic in tests. Just verify results by hardcoded values.
+> [!NOTE]
+> Don't duplicate the production logic in tests. Just verify results by hardcoded values.
 
 ### Mocking concrete classes
 
@@ -2382,10 +2357,8 @@ final class ValidTest extends TestCase
 }
 ```
 
-| :information_source: **INFORMATION:** |
-|:--------------------------------------|
-
-The necessity to mock a concrete class to replace a part of its behavior means that this class is probably too complicated and violates the Single Responsibility Principle.
+> [!NOTE]
+> The necessity to mock a concrete class to replace a part of its behavior means that this class is probably too complicated and violates the Single Responsibility Principle.
 
 ### Testing private methods
 
@@ -2500,9 +2473,8 @@ final class ValidTest extends TestCase
 }
 ```
 
-| :exclamation: **WARNING** |
-|:--------------------------|
-Tests should only verify public API.
+> [!ATTENTION]
+> Tests should only verify public API.
 
 ### Time as a volatile dependency
 
@@ -2668,15 +2640,11 @@ final class ValidTest extends TestCase
 }
 ```
 
-
-
-| :information_source: **INFORMATION** |
-|:-------------------------------------|
-
-The time and random numbers should not be generated directly in the domain code. To test behavior we must have
+> [!NOTE]
+> The time and random numbers should not be generated directly in the domain code. To test behavior we must have
 deterministic results, so we need to inject these values into a domain object like in the example above.
 
-## 100% Test Coverage shouldn't be the goal  
+## 100% Test Coverage shouldn't be the goal
 
 100% Coverage is not the goal or even is undesirable because if there is 100% coverage, tests probably will be very fragile, which means refactoring will be very hard.
 Mutation testing gives better feedback about the quality of tests.
@@ -2688,8 +2656,8 @@ Mutation testing gives better feedback about the quality of tests.
 - [Unit Testing Principles, Practices, and Patterns / Vladimir Khorikov](https://amzn.to/3PCMD7f) - the best book about tests I've ever read
 
 ## Author
-:construction_worker: **Kamil Ruczyński**  
-  
+:construction_worker: **Kamil Ruczyński**
+
 **Twitter:** [https://twitter.com/Sarvendev](https://twitter.com/Sarvendev)  
 **Blog:** [https://sarvendev.com/](https://sarvendev.com/)  
 **LinkedIn:** [https://www.linkedin.com/in/kamilruczynski/](https://www.linkedin.com/in/kamilruczynski/)  
