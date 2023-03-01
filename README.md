@@ -191,8 +191,7 @@ $mailer
 
 ### Always prefer own test double classes than those provided by a framework
 
-| :x: **NOT GOOD:** |
-|:------------------|
+> [!WARNING|style:flat|label:NOT GOOD]
 
 ```php
 final class TestExample extends TestCase
@@ -217,8 +216,7 @@ final class TestExample extends TestCase
 }
 ```
 
-| :white_check_mark: **BETTER:** |
-|:-------------------------------|
+> [!TIP|style:flat|label:BETTER]
 
 - **Better resistance to refactoring**
     - Using Refactor->Rename on the particular method doesn't break the test
@@ -252,8 +250,7 @@ final class TestExample extends TestCase
 
 ## Naming
 
-| :x: **NOT GOOD:** |
-|:------------------|
+> [!WARNING|style:flat|label:NOT GOOD]
 
 ```php
 public function test(): void
@@ -266,8 +263,7 @@ public function test(): void
 }
 ```
 
-| :white_check_mark: **Specify explicitly what you are testing** |
-|:---------------------------------------------------------------|
+> [!TIP|style:flat|label:Specify explicitly what you are testing]
 
 ```php
 public function sut(): void
@@ -281,8 +277,8 @@ public function sut(): void
 }
 ``` 
 
-| :x: **NOT GOOD:** |
-|:------------------|
+> [!WARNING|style:flat|label:NOT GOOD]
+
 ```php
 public function it_throws_invalid_credentials_exception_when_sign_in_with_invalid_credentials(): void
 {
@@ -300,8 +296,7 @@ public function testDeactivateASubscription(): void
 }
 ```
 
-| :white_check_mark: **Better** |
-|:------------------------------|
+> [!TIP|style:flat|label:BETTER]
 
 - **Using underscore improves readability**
 - **The name should describe the behavior, not the implementation**
@@ -350,8 +345,7 @@ Separate three sections of the test:
 - **Act**: Invoke a tested element.
 - **Assert**: Verify the result, the final state, or the communication with collaborators.
 
-| :white_check_mark: **GOOD** |
-|:----------------------------|
+> [!TIP|style:flat|label:GOOD]
 
 ```php
 public function aaa_pattern_example_test(): void
@@ -668,8 +662,7 @@ final class NotificationService
 }
 ```
 
-| :x: **BAD:** |
-|:-------------|
+> [!WARNING|style:flat|label:BAD]
 
 - **Asserting interactions with stubs leads to fragile tests**
 
@@ -697,8 +690,7 @@ final class TestExample extends TestCase
 }
 ```
 
-| :white_check_mark: **GOOD:** |
-|:-----------------------------|
+> [!TIP|style:flat|label:GOOD]
 
 ```php
 final class TestExample extends TestCase
@@ -725,8 +717,8 @@ final class TestExample extends TestCase
 }
 ```
 
-| :white_check_mark: **EVEN BETTER USING SPY:** |
-|:----------------------------------------------|
+> [!TIP|style:flat|label:EVEN BETTER USING SPY]
+
 
 ```php
 final class TestExample extends TestCase
@@ -755,8 +747,8 @@ final class TestExample extends TestCase
 
 ### Output
 
-| :white_check_mark: **The best option:** |
-|:----------------------------------------|
+> [!TIP|style:flat|label:The best option]
+
 
 - **The best resistance to refactoring**
 - **The best accuracy**
@@ -816,8 +808,7 @@ final class ExampleTest extends TestCase
 
 ### State
 
-| :heavy_minus_sign: **Worse option:** |
-|:-------------------------------------|
+> [!WARNING|style:flat|label:Worse option]
 
 - **Worse resistance to refactoring**
 - **Worse accuracy**
@@ -844,8 +835,7 @@ final class ExampleTest extends TestCase
 
 ### Communication
 
-| :x: **The worst option:** |
-|:--------------------------|
+> [!ATTENTION|style:flat|label:The worst option]
 
 - **The worst resistance to refactoring**
 - **The worst accuracy**
@@ -877,8 +867,7 @@ final class ExampleTest extends TestCase
 
 ## Functional architecture and tests
 
-| :x: **BAD:** |
-|:-------------|
+> [!WARNING|style:flat|label:BAD]
 
 ```php
 final class NameService
@@ -906,8 +895,7 @@ final class NameService
 **How to test a code like this? It is possible only with an integration test because it directly uses
 an infrastructure code related to a file system.**
 
-| :white_check_mark: **GOOD:** |
-|:-----------------------------|
+> [!TIP|style:flat|label:GOOD]
 
 Like in functional architecture, we need to separate a code with side effects and code that contains only logic.
 
@@ -994,8 +982,7 @@ final class ValidUnitExampleTest extends TestCase
 
 ## Observable behavior vs. implementation details
 
-| :x: **BAD:** |
-|:-------------|
+> [!WARNING|style:flat|label:BAD]
 
 ```php
 final class ApplicationService
@@ -1092,8 +1079,7 @@ final class InvalidTestExample extends TestCase
 }
 ```
 
-| :white_check_mark: **GOOD:** |
-|:-----------------------------|
+> [!TIP|style:flat|label:GOOD]
 
 ```php
 final class ApplicationService
@@ -1208,8 +1194,7 @@ final class ValidTestExample extends TestCase
 
 ## Unit of behavior
 
-| :x: **BAD:** |
-|:-------------|
+> [!WARNING|style:flat|label:BAD]
 
 ```php
 class CannotSuspendExpiredSubscriptionPolicy implements SuspendingPolicyInterface
@@ -1461,8 +1446,7 @@ class SubscriptionTest extends TestCase
 > [!ATTENTION]
 > **Do not write code 1:1, 1 class : 1 test. It leads to fragile tests which make that refactoring is tough.**
 
-| :white_check_mark: **GOOD:** |
-|:-----------------------------|
+> [!TIP|style:flat|label:GOOD]
 
 ```php
 final class CannotSuspendExpiredSubscriptionPolicy implements SuspendingPolicyInterface
@@ -1720,8 +1704,7 @@ class ApplicationService
 }
 ```
 
-| :white_check_mark: **GOOD:** |
-|:-----------------------------|
+> [!TIP|style:flat|label:GOOD]
 
 It's required to split up an overcomplicated code to separate classes.
 
@@ -1805,8 +1788,7 @@ However, ApplicationService probably should be tested by an integration test wit
 
 ## Trivial test
 
-| :x: **BAD:** |
-|:-------------|
+> [!WARNING|style:flat|label:BAD]
 
 ```php
 final class Customer
@@ -1872,8 +1854,7 @@ final class EventSubscriberTest extends TestCase
 
 ## Fragile test
 
-| :x: **BAD:** |
-|:-------------|
+> [!WARNING|style:flat|label:BAD]
 
 ```php
 final class UserRepository
@@ -1946,8 +1927,7 @@ final class TestUserRepository extends TestCase
 
 ## Test fixtures
 
-| :white_check_mark: **GOOD:** |
-|:-----------------------------|
+> [!TIP|style:flat|label:GOOD]
 
 ```php
 final class GoodTest extends TestCase
@@ -1987,8 +1967,8 @@ final class GoodTest extends TestCase
 > - It's better to avoid a shared state between tests and configure the initial state accordingly to test method.
 > - Readability is worse compared to configuration made in the proper test method.
 
-| :white_check_mark: **BETTER:** |
-|:-------------------------------|
+> [!TIP|style:flat|label:BETTER]
+
 ```php
 final class BetterTest extends TestCase
 {
@@ -2055,8 +2035,7 @@ final class BetterTest extends TestCase
 
 ### Exposing private state
 
-| :x: **BAD:** |
-|:-------------|
+> [!WARNING|style:flat|label:BAD]
 
 ```php
 final class Customer
@@ -2102,8 +2081,7 @@ final class InvalidTest extends TestCase
 }
 ```
 
-| :white_check_mark: **GOOD:** |
-|:-----------------------------|
+> [!TIP|style:flat|label:GOOD]
 
 ```php
 final class Customer
@@ -2165,8 +2143,7 @@ final class DiscountCalculator
 }
 ```
 
-| :x: **BAD:** |
-|:-------------|
+> [!WARNING|style:flat|label:BAD]
 
 ```php
 final class InvalidTest extends TestCase
@@ -2192,8 +2169,7 @@ final class InvalidTest extends TestCase
     }
 }
 ```
-| :white_check_mark: **GOOD:** |
-|:-----------------------------|
+> [!TIP|style:flat|label:GOOD]
 
 ```php
 final class ValidTest extends TestCase
@@ -2226,8 +2202,7 @@ final class ValidTest extends TestCase
 
 ### Mocking concrete classes
 
-| :x: **BAD:** |
-|:-------------|
+> [!WARNING|style:flat|label:BAD]
 
 ```php
 class DiscountCalculator
@@ -2287,8 +2262,7 @@ final class InvalidTest extends TestCase
 }
 ```
 
-| :white_check_mark: **GOOD:** |
-|:-----------------------------|
+> [!TIP|style:flat|label:GOOD]
 
 
 ```php
@@ -2394,8 +2368,7 @@ final class Order
 }
 ```
 
-| :x: **BAD:** |
-|:-------------|
+> [!WARNING|style:flat|label:BAD]
 
 
 ```php
@@ -2447,8 +2420,7 @@ final class InvalidTest extends TestCase
 }
 ```
 
-| :white_check_mark: **GOOD:** |
-|:-----------------------------|
+> [!TIP|style:flat|label:GOOD]
 
 ```php
 final class ValidTest extends TestCase
@@ -2480,8 +2452,7 @@ final class ValidTest extends TestCase
 
 The time is a volatile dependency because it is non-deterministic. Each invocation returns a different result.
 
-| :x: **BAD:** |
-|:-------------|
+> [!WARNING|style:flat|label:BAD]
 
 
 ```php
@@ -2556,8 +2527,7 @@ final class InvalidTest extends TestCase
 }
 ```
 
-| :white_check_mark: **GOOD:** |
-|:-----------------------------|
+> [!TIP|style:flat|label:GOOD]
 
 
 ```php
