@@ -61,7 +61,7 @@ If you have any improvement ideas or a topic to write about, feel free to prepar
 
 Test doubles are fake dependencies used in tests.
 
-![Test doubles](./assets/test-doubles.jpg "Test doubles")
+![Test doubles](./assets/test-doubles.jpg ':size=800')
 
 ### Stubs
 
