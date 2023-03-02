@@ -7,11 +7,15 @@ because they are fast and can us instantly assure that our implementation is cor
 However, I often see a problem with good tests in projects, though these tests' benefits are only huge when you have good unit tests.
 So in these examples, I will try to share some tips on what to do to write good unit tests.
 
-## Author
-:construction_worker: **Kamil Ruczyński**
+[![GitHub stars](https://img.shields.io/github/stars/sarven/unit-testing-tips.svg?style=social&label=Star)](https://github.com/sarven/unit-testing-tips/)
 
-**Twitter:** [https://twitter.com/Sarvendev](https://twitter.com/Sarvendev)  
-**Blog:** [https://sarvendev.com/](https://sarvendev.com/)  
+## Author
+
+:construction_worker: **Kamil Ruczyński** 
+    
+[![Twitter](https://img.shields.io/twitter/follow/Sarvendev?label=Follow)](https://twitter.com/Sarvendev)
+
+**Blog:** [https://sarvendev.com/](https://sarvendev.com/)   
 **LinkedIn:** [https://www.linkedin.com/in/kamilruczynski/](https://www.linkedin.com/in/kamilruczynski/)
 
 I have a lot of plans to write more about good practices, not only regarding unit tests, but also other levels of tests.
