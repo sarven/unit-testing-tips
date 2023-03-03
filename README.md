@@ -1,3 +1,7 @@
+[![GitHub stars](https://img.shields.io/github/stars/sarven/unit-testing-tips.svg?style=social&label=Star)](https://github.com/sarven/unit-testing-tips/)
+[![GitHub watchers](https://img.shields.io/github/watchers/sarven/unit-testing-tips.svg?style=social&label=Watch)](https://github.com/sarven/unit-testing-tips/watchers/)
+[![GitHub forks](https://img.shields.io/github/forks/sarven/unit-testing-tips.svg?style=social&label=Fork)](https://github.com/sarven/unit-testing-tips/forks/)
+
 # Testing tips
 
 In these times, the benefits of writing unit tests are huge.
@@ -7,13 +11,14 @@ because they are fast and can us instantly assure that our implementation is cor
 However, I often see a problem with good tests in projects, though these tests' benefits are only huge when you have good unit tests.
 So in these examples, I will try to share some tips on what to do to write good unit tests.
 
-[![GitHub stars](https://img.shields.io/github/stars/sarven/unit-testing-tips.svg?style=social&label=Star)](https://github.com/sarven/unit-testing-tips/)
+**Easy-to-read version:** [https://testing-tips.sarvendev.com/](https://testing-tips.sarvendev.com/)
 
 ## Author
 
 :construction_worker: **Kamil Ruczyński** 
     
-[![Twitter](https://img.shields.io/twitter/follow/Sarvendev?label=Follow)](https://twitter.com/Sarvendev)
+[![Twitter](https://img.shields.io/twitter/follow/Sarvendev?label=Follow&style=social)](https://twitter.com/Sarvendev)
+[![Github](https://img.shields.io/github/followers/sarven?label=Follow&style=social)](https://github.com/sarven)
 
 **Blog:** [https://sarvendev.com/](https://sarvendev.com/)   
 **LinkedIn:** [https://www.linkedin.com/in/kamilruczynski/](https://www.linkedin.com/in/kamilruczynski/)
