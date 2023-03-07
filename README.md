@@ -29,6 +29,25 @@ and follow me on Twitter and Github to be up-to-date with all updates.
 
 If you have any improvement ideas or a topic to write about, feel free to prepare a pull request or just let me know.
 
+## Ebook - The Foundation of Successful Software Engineering: A Practical Guide to Testing Best Practices
+
+After the success of this guide, I’ve started thinking about writing an ebook about a broader practical guide to testing best practices:
+
+- Undervalued Test Driven Development (TDD)
+- Unit tests
+- Integration tests
+- Modularity and tests
+- Contract testing
+- Behavior-Driven Development (BDD)
+- A lot of practical examples
+- Only necessary theory → as simple as possible
+
+Firstly I would like to validate this idea. So I hope that you will be able to help me with this. 
+If you are interested in this ebook, have a look at:   
+:point_right: [Details](https://sarvendev.com/ebook-practical-guide-to-testing-best-practices/)
+
+I still have a pretty long TODO list of improvements to this guide about Unit Testing and I will introduce them in the near future.
+
 ## Table of Contents
 
 1. [Introduction](#introduction)
