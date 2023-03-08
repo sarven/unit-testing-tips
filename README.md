@@ -1,6 +1,7 @@
 [![GitHub stars](https://img.shields.io/github/stars/sarven/unit-testing-tips.svg?style=social&label=Star)](https://github.com/sarven/unit-testing-tips/)
 [![GitHub watchers](https://img.shields.io/github/watchers/sarven/unit-testing-tips.svg?style=social&label=Watch)](https://github.com/sarven/unit-testing-tips/watchers/)
 [![GitHub forks](https://img.shields.io/github/forks/sarven/unit-testing-tips.svg?style=social&label=Fork)](https://github.com/sarven/unit-testing-tips/forks/)
+[![GitHub contributors](https://img.shields.io/github/contributors/sarven/unit-testing-tips.svg)](https://github.com/sarven/unit-testing-tips/graphs/contributors/)
 
 # Testing tips
 
