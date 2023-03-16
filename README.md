@@ -590,7 +590,7 @@ final class ExampleTest extends TestCase
         self::assertTrue($result);
     }
 
-    public function getInvalidEmails(): array
+    public function getInvalidEmails(): iterable
     {
         yield 'An invalid email without @' => ['test'];
         yield 'An invalid email without the domain after @' => ['test@'];
@@ -598,7 +598,7 @@ final class ExampleTest extends TestCase
         //...
     }
 
-    public function getValidEmails(): array
+    public function getValidEmails(): iterable
     {
         yield 'A valid email with lowercase letters' => ['test@test.com'];
         yield 'A valid email with lowercase letters and digits' => ['test123@test.com'];
@@ -607,6 +607,9 @@ final class ExampleTest extends TestCase
     }
 }
 ```
+
+> [!NOTE]
+> Use `yield` and add a text description to cases to improve the readability.
 
 ## Two schools of unit testing
 
