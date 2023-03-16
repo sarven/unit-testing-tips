@@ -592,22 +592,18 @@ final class ExampleTest extends TestCase
 
     public function getInvalidEmails(): array
     {
-        return [
-            ['test'],
-            ['test@'],
-            ['test@test'],
-            //...
-        ];
+        yield 'An invalid email without @' => ['test'];
+        yield 'An invalid email without the domain after @' => ['test@'];
+        yield 'An invalid email without TLD' => ['test@test'];
+        //...
     }
 
     public function getValidEmails(): array
     {
-        return [
-            ['test@test.com'],
-            ['test123@test.com'],
-            ['Test123@test.com'],
-            //...
-        ];
+        yield 'A valid email with lowercase letters' => ['test@test.com'];
+        yield 'A valid email with lowercase letters and digits' => ['test123@test.com'];
+        yield 'A valid email with uppercase letters and digits' => ['Test123@test.com'];
+        //...
     }
 }
 ```
