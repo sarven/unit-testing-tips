@@ -24,9 +24,16 @@ So in these examples, I will try to share some tips on what to do to write good 
 **Blog:** [https://sarvendev.com/](https://sarvendev.com/)   
 **LinkedIn:** [https://www.linkedin.com/in/kamilruczynski/](https://www.linkedin.com/in/kamilruczynski/)
 
-I have a lot of plans to write more about good practices, not only regarding unit tests, but also other levels of tests.
-Of course, it requires a lot of time, so if you want to motivate me please give a star to this repository
-and follow me on Twitter and Github to be up-to-date with all updates.
+### Support
+Your support means the world to me!
+If you've enjoyed this guide and find value in the knowledge shared,
+consider supporting me on BuyMeCoffee:
+
+[![BuyMeCoffee](./assets/bmc-button.png ':size=150')](https://www.buymeacoffee.com/sarvendev)
+
+or simply leaving a star on the repository and
+following me on Twitter and Github to be up-to-date with all updates.
+Your generosity fuels my passion for creating more insightful content for you.
 
 If you have any improvement ideas or a topic to write about, feel free to prepare a pull request or just let me know.
 
