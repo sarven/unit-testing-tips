@@ -613,7 +613,6 @@ final class ExampleTest extends TestCase
 ### Classical (Detroit school)
 
 - The unit is a single unit of behavior, it can be a few related classes.
-- Every test should be isolated from others. So it must be possible to invoke them in parallel or in any order.
 
 ```php
 final class TestExample extends TestCase
