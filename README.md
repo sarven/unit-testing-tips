@@ -1468,7 +1468,7 @@ class SubscriptionTest extends TestCase
 ```
 
 > [!ATTENTION]
-> **Do not write code 1:1, 1 class : 1 test. It leads to fragile tests which make that refactoring is tough.**
+> **Do not write code 1:1, 1 class : 1 test. It leads to fragile tests which make refactoring more cumbersome.**
 
 > [!TIP|style:flat|label:GOOD]
 
